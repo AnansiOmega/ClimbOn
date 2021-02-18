@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { fetchUserSuccess } from '../Actions/auth'
-import { FormGroup, Label, Input, Col, Row } from 'reactstrap';
+import { FormGroup, Label, Input, Col, Row, FormText } from 'reactstrap';
 import Popover from "@material-ui/core/Popover";
+import axios from 'axios'
 
 
 // @material-ui/core components
@@ -51,9 +52,7 @@ export default function LoginPage(props) {
   const handleInput = e => {
     switch(e.target.id){
       case 'username':
-          console.log(e.target.value, 'value')
           setUsername(e.target.value)
-          console.log(username, 'username')
       break;
       case 'password':
           setPassword(e.target.value)
@@ -96,27 +95,29 @@ export default function LoginPage(props) {
   }
   }
 
+  let formState = {username, password, fname, lname, age, gender, climbing_preference, commitment, skill_level, bio, street, city, state}
+
+  const formData = new FormData()
+
+  for (const property in formState) {
+      formData.append(
+          property, formState[property]
+      )
+  }
+
   const handleSubmit = e => {
       e.preventDefault()
-      let reqObj = {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({username, password, fname, lname, age, gender, climbing_preference, commitment, skill_level, bio, street, city, state})
-      }
-      fetch('http://localhost:3000/users', reqObj)
-      .then( resp => resp.json())
+
+      axios.post('http://localhost:3000/users', formData)
       .then( data => {
-        fetch('http://localhost:3000/auth', reqObj)
-        .then(resp => resp.json())
-        .then(user => {
-            if(user.errors){
+        axios.post('http://localhost:3000/auth', formData)
+        .then(data => {
+            if(data.data.errors){
                 // setSignupErrors(user.errors)
             return
             } else {
-                localStorage.setItem('myToken', user.token)
-                dispatch(fetchUserSuccess(user))
+                localStorage.setItem('myToken', data.data.token)
+                dispatch(fetchUserSuccess(data.data))
                 history.push('/')
             }
         })
@@ -316,6 +317,11 @@ export default function LoginPage(props) {
                         <Label>Bio</Label>
                         <Input type="textarea" id="bio" value={bio} onChange={handleInput} />
                     </FormGroup>
+                    <Label>Profile Image</Label>
+                    <Input type="file" name="file" accept='image/jpeg, image/jpg' />
+                    <FormText color="muted">
+                    Select a jpg image to use as your profile photo.
+                    </FormText>
                   </CardBody>
                   <CardFooter className={classes.cardFooter}>
                     <Button onClick={handleSubmit} simple color="primary" size="lg">

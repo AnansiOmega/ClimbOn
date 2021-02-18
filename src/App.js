@@ -2,9 +2,7 @@ import React, { useEffect } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import { currentUser } from './Actions/auth'
 import { useDispatch } from 'react-redux'
-import LandingPage from "views/LandingPage/LandingPage.js";
-// import Components from "views/Components/Components.js";
-// import ProfilePage from "views/ProfilePage/ProfilePage.js";
+import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 
@@ -28,8 +26,6 @@ export const App = () => {
                 <Route path="/login" component={LoginPage} />
                 <Route path="/signup" component={SignupPage} />
                 <Route path="/" component={LandingPage} />
-                {/* <Route path="/profile-page" component={ProfilePage} /> */}
-                {/* <Route path="/" component={Components} /> */}
             </Switch>
         </div>
     )

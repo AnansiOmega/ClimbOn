@@ -7,6 +7,7 @@ import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import rootReducer from './Reducers/index'
 
+import './assets/css/app.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "assets/scss/material-kit-react.scss?v=1.9.0";
 
