@@ -17,3 +17,37 @@ export const logoutUser = () => {
         type: 'LOGOUT_USER'
     }
 }
+
+export const thunkFetchAuthorization = (username, password) => {
+    return (dispatch) => {
+    let reqObj = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({username, password})
+    }
+    fetch('http://localhost:3000/auth', reqObj)
+    .then(resp => resp.json())
+    .then(user => {
+        localStorage.setItem('myToken', user.token)
+        dispatch(fetchUserSuccess(user))
+    })
+    }
+}
+
+export const thunkFetchAuthCurrentUser = () => {
+    return (dispatch) => {
+    const token = localStorage.getItem('myToken')
+    const reqObj = {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    }
+    fetch('http://localhost:3000/current_user', reqObj)
+    .then(resp => resp.json())
+    .then(user => dispatch(currentUser(user)))
+    }
+
+}

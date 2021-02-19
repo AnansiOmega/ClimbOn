@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { fetchUserSuccess } from '../Actions/auth'
+import { thunkFetchAuthorization } from '../Actions/auth'
+
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -52,28 +53,9 @@ export default function LoginPage(props) {
 
   const handleLogin = (e) => {
     e.preventDefault()
-    let reqObj = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({username, password})
-    }
-    fetch('http://localhost:3000/auth', reqObj)
-    .then(resp => resp.json())
-    .then(user => {
-        if(user.error){
-            setLoginErrors(user.error)
-        } else {
-            localStorage.setItem('myToken', user.token)
-            dispatch(fetchUserSuccess(user))
-            history.push('/')
-        }
-    })
-}
-
-
-
+    dispatch(thunkFetchAuthorization(username, password))
+    history.push('/')
+  }
 
   const classes = useStyles();
   return (

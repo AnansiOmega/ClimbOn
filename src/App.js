@@ -8,18 +8,6 @@ import SignupPage from './pages/SignupPage'
 
 export const App = () => {
     const dispatch = useDispatch()
-    useEffect(() => {
-        const token = localStorage.getItem('myToken')
-        const reqObj = {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        }
-        fetch('http://localhost:3000/current_user', reqObj)
-        .then(resp => resp.json())
-        .then(user => dispatch(currentUser(user)))
-      },[])
     return(
         <div className='root'>
             <Switch>

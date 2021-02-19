@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { fetchUserSuccess } from '../Actions/auth'
+import { thunkCreateNewUser } from '../Actions/user'
 import { FormGroup, Label, Input, Col, Row, FormText } from 'reactstrap';
 import Popover from "@material-ui/core/Popover";
-import axios from 'axios'
 
 
 // @material-ui/core components
@@ -21,7 +20,6 @@ import CustomInput from "components/CustomInput/CustomInput.js";
 import styles from "assets/jss/material-kit-react/views/loginPage.js";
 
 import image from '../imgs/login-page-bckgrnd.jpg'
-// import { Popover } from "bootstrap";
 
 const useStyles = makeStyles(styles);
 
@@ -47,6 +45,7 @@ export default function LoginPage(props) {
   const [street, setStreet] = useState('')
   const [city, setCity] = useState('')
   const [state, setState] = useState('')
+  const [photo, setPhoto] = useState('')
   
 
   const handleInput = e => {
@@ -90,38 +89,29 @@ export default function LoginPage(props) {
       case 'state':
           setState(e.target.value)
       break;
+      case 'photo':
+          setPhoto(e.target.files[0])
+      break;
       default:
       return
   }
   }
 
-  let formState = {username, password, fname, lname, age, gender, climbing_preference, commitment, skill_level, bio, street, city, state}
-
-  const formData = new FormData()
-
-  for (const property in formState) {
-      formData.append(
-          property, formState[property]
-      )
-  }
-
+  
   const handleSubmit = e => {
-      e.preventDefault()
+    e.preventDefault()
+    let formState = {username, password, fname, lname, age, gender, climbing_preference, commitment, skill_level, bio, street, city, state, photo}
 
-      axios.post('http://localhost:3000/users', formData)
-      .then( data => {
-        axios.post('http://localhost:3000/auth', formData)
-        .then(data => {
-            if(data.data.errors){
-                // setSignupErrors(user.errors)
-            return
-            } else {
-                localStorage.setItem('myToken', data.data.token)
-                dispatch(fetchUserSuccess(data.data))
-                history.push('/')
-            }
-        })
-      })
+    const formData = new FormData()
+
+    for (const property in formState) {
+        formData.append(
+            property, formState[property]
+        )
+    }
+
+    dispatch(thunkCreateNewUser(formData))
+    history.push('/')
   }
 
 
@@ -318,7 +308,7 @@ export default function LoginPage(props) {
                         <Input type="textarea" id="bio" value={bio} onChange={handleInput} />
                     </FormGroup>
                     <Label>Profile Image</Label>
-                    <Input type="file" name="file" accept='image/jpeg, image/jpg' />
+                    <Input type="file" name="file" accept='image/jpeg, image/jpg' onChange={handleInput} id='photo'/>
                     <FormText color="muted">
                     Select a jpg image to use as your profile photo.
                     </FormText>
