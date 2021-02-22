@@ -5,6 +5,8 @@ const landingPageStyle = {
   container: {
     zIndex: "12",
     color: "#FFFFFF",
+    textAlign: 'center',
+    alignContent: 'center',
     ...container
   },
   title: {

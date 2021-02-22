@@ -1,5 +1,8 @@
 /*eslint-disable*/
 import React from "react";
+import { useDispatch } from 'react-redux'
+import { logoutUser } from '../Actions/auth'
+import { useHistory } from 'react-router-dom'
 import DeleteIcon from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
 // react components for routing our app without refresh
@@ -23,6 +26,15 @@ import styles from "assets/jss/material-kit-react/components/headerLinksStyle.js
 const useStyles = makeStyles(styles);
 
 export default function HeaderLinks(props) {
+  const dispatch = useDispatch();
+  const history = useHistory()
+
+  const handleLogout = () => {
+    dispatch(logoutUser)
+    localStorage.removeItem('myToken')
+    history.push('/login')
+  }
+
   const classes = useStyles();
   return (
     <List className={classes.list}>
@@ -99,21 +111,13 @@ export default function HeaderLinks(props) {
         </Tooltip>
       </ListItem>
       <ListItem className={classes.listItem}>
-        <Tooltip
-          id="instagram-tooltip"
-          title="Follow us on instagram"
-          placement={window.innerWidth > 959 ? "top" : "left"}
-          classes={{ tooltip: classes.tooltip }}
-        >
           <Button
+            onClick={handleLogout}
             color="transparent"
-            href="https://www.instagram.com/CreativeTimOfficial?ref=creativetim"
-            target="_blank"
             className={classes.navLink}
           >
-            <i className={classes.socialIcons + " fab fa-instagram"} />
+          Logout
           </Button>
-        </Tooltip>
       </ListItem>
     </List>
   );

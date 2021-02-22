@@ -36,9 +36,8 @@ export const thunkFetchAuthorization = (username, password) => {
     }
 }
 
-export const thunkFetchAuthCurrentUser = () => {
+export const thunkFetchAuthCurrentUser = (token) => {
     return (dispatch) => {
-    const token = localStorage.getItem('myToken')
     const reqObj = {
         method: 'GET',
         headers: {

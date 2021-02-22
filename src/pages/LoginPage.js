@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { thunkFetchAuthorization } from '../Actions/auth'
+import { useDispatch, useSelector } from 'react-redux'
+import { thunkFetchAuthorization, thunkFetchAuthCurrentUser } from '../Actions/auth'
 
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
@@ -36,6 +36,11 @@ export default function LoginPage(props) {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const auth = useSelector(state => state.auth)
+  useEffect(() => {
+    const token = localStorage.getItem('myToken')
+    token ? history.push('/') : history.push('/login')
+  },[auth])
   const [loginErrors, setLoginErrors] = useState([])
 
   const handleInput = e => {
@@ -54,7 +59,6 @@ export default function LoginPage(props) {
   const handleLogin = (e) => {
     e.preventDefault()
     dispatch(thunkFetchAuthorization(username, password))
-    history.push('/')
   }
 
   const classes = useStyles();
