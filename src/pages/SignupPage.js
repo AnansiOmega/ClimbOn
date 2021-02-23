@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { thunkCreateNewUser } from '../Actions/user'
 import { FormGroup, Label, Input, Col, Row, FormText } from 'reactstrap';
 import Popover from "@material-ui/core/Popover";
@@ -31,6 +31,10 @@ export default function LoginPage(props) {
   const history = useHistory()
   const [anchorElTop, setAnchorElTop] = useState(null);
   const dispatch = useDispatch()
+  const errors = useSelector(state => state.loginErrors)
+  useEffect(() => {
+    setLoginErrors(errors)
+  }, [errors])
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -46,6 +50,7 @@ export default function LoginPage(props) {
   const [city, setCity] = useState('')
   const [state, setState] = useState('')
   const [photo, setPhoto] = useState('')
+  const [loginErrors, setLoginErrors] = useState([])
   
 
   const handleInput = e => {
@@ -115,6 +120,13 @@ export default function LoginPage(props) {
   }
 
 
+  const renderErrors = () => {
+    if(loginErrors){
+        return loginErrors.map(error => error.split(' ')[0])
+    } else {
+        return []
+    }
+}
 
   const classes = useStyles();
   return (

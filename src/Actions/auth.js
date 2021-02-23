@@ -1,3 +1,5 @@
+import {loginErrors} from './user'
+
 export const fetchUserSuccess = (payload) => {
     return {
         type: 'FETCH_USER_SUCCESS',
@@ -30,6 +32,10 @@ export const thunkFetchAuthorization = (username, password) => {
     fetch('http://localhost:3000/auth', reqObj)
     .then(resp => resp.json())
     .then(user => {
+        if(user.error){
+             dispatch(loginErrors(user.error))
+             return
+            }
         localStorage.setItem('myToken', user.token)
         dispatch(fetchUserSuccess(user))
     })

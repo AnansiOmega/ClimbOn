@@ -10,7 +10,8 @@ const parallaxStyle = {
     padding: "0",
     border: "0",
     display: "flex",
-    alignItems: "center"
+    alignItems: "center",
+    justifyContent: 'center'
   },
   filter: {
     "&:before": {

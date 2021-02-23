@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from 'react-router-dom'
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { thunkFetchRootUser } from '../Actions/user'
@@ -29,6 +29,10 @@ const useStyles = makeStyles(styles);
 export default function LandingPage(props) {
   const auth = useSelector(state => state.auth, shallowEqual)
   const user = useSelector(state => state.user, shallowEqual)
+  const [picAnimation, setPicAnimation] = useState('hidden-profile-pic')
+  useEffect(() => {
+    setTimeout(() => setPicAnimation('profile-pic'), 2000)
+  }, [])
   const dispatch = useDispatch()
   const history = useHistory()
   useEffect(() => {
@@ -46,25 +50,32 @@ export default function LandingPage(props) {
     classes.imgRoundedCircle,
     classes.imgFluid
   );
-   const { id, username, fname, lname, age, gender, climbing_preference, commitment, skill_level, bio, street, city, state, photo, password } = user
+  const { id, username, fname, lname, age, gender, climbing_preference, commitment, skill_level, bio, street, city, state, photo, password } = user
+
+  const renderFriends = () => {
+    if(!user.followers) return 
+    return user.followers.map( person => {
+      const imgUrl = `http://localhost:3000/${person.photo}`    
+      return <div className={picAnimation}><img src={imgUrl} alt="..." className={imageClasses}  id='friends-landing-page-pic'/></div>
+    }) 
+  }
+
   const imgUrl = `http://localhost:3000/${photo}`
   return (
     <div>
       <Parallax filter image={require("imgs/rock-climbing-pic.jpg")}>
-        <div className={classes.container}>
-          <GridContainer>
-            <GridItem xs={12} sm={12}>
-              <h1>{username}</h1>
-              <img src={imgUrl} alt="..." className={imageClasses}  id='landing-page-pic'/>
+        <section className='user-page-people'>
+          {renderFriends()}
+          <div className={picAnimation}>
+              <img src={imgUrl} alt="..." className={imageClasses} id='landing-page-pic'/>
               <h4>
                 {`${fname} ${lname}`}
               </h4>
               <h4>
                  {`Climbing ${climbing_preference} ${commitment} ${commitment === 1 ? 'day' : 'days' } a week`}
               </h4>
-            </GridItem>
-          </GridContainer>
-        </div>
+          </div>
+        </section>
       </Parallax>
       <div className={classNames(classes.main, classes.mainRaised)}>
         <div className={classes.container}>

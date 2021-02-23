@@ -31,16 +31,22 @@ export default function LoginPage(props) {
     setCardAnimation("");
   }, 700);
 
+
   const history = useHistory()
   const dispatch = useDispatch()
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const auth = useSelector(state => state.auth)
+  const errors = useSelector(state => state.loginErrors)
+
   useEffect(() => {
     const token = localStorage.getItem('myToken')
     token ? history.push('/') : history.push('/login')
   },[auth])
+  useEffect(() => {
+    setLoginErrors(errors)
+  }, [errors])
   const [loginErrors, setLoginErrors] = useState([])
 
   const handleInput = e => {
@@ -92,6 +98,7 @@ export default function LoginPage(props) {
                     </div>
                   </CardHeader>
                   <p className={classes.divider}>Or Be Classical</p>
+                  { loginErrors.length > 1 ? <p className={classes.divider} style={{ color:'red', }}>Username or Password is incorrect</p> : null }
                   <CardBody>
                     <CustomInput
                       labelText="Username"
