@@ -8,12 +8,12 @@ import Camera from "@material-ui/icons/Camera";
 import Palette from "@material-ui/icons/Palette";
 import Favorite from "@material-ui/icons/Favorite";
 // core components
-import Header from "components/Header/Header.js";
+// import Header from "components/Header/Header.js";
 import Footer from "components/Footer/Footer.js";
 import Button from "components/CustomButtons/Button.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
-import HeaderLinks from "components/Header/HeaderLinks.js";
+// import HeaderLinks from "components/Header/HeaderLinks.js";
 import NavPills from "components/NavPills/NavPills.js";
 import Parallax from "components/Parallax/Parallax.js";
 
@@ -45,7 +45,7 @@ export default function ProfilePage(props) {
   const navImageClasses = classNames(classes.imgRounded, classes.imgGallery);
   return (
     <div>
-      <Header
+      {/* <Header
         color="transparent"
         brand="Material Kit React"
         rightLinks={<HeaderLinks />}
@@ -55,8 +55,8 @@ export default function ProfilePage(props) {
           color: "white"
         }}
         {...rest}
-      />
-      <Parallax small filter image={require("assets/img/profile-bg.jpg")} />
+      /> */}
+      {/* <Parallax small filter image={require("assets/img/profile-bg.jpg")} /> */}
       <div className={classNames(classes.main, classes.mainRaised)}>
         <div>
           <div className={classes.container}>

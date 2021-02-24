@@ -111,7 +111,7 @@ export default function LoginPage(props) {
 
     for (const property in formState) {
         formData.append(
-            property, formState[property]
+            property, formState[property].toLowerCase()
         )
     }
 
