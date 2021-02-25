@@ -4,11 +4,11 @@ import { currentUser } from './Actions/auth'
 import { useDispatch } from 'react-redux'
 import LandingPage from './pages/LandingPage';
 import { FindClimbers } from './pages/FindClimbers'
+import ProfilePage from './pages/ProfilePage'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import Header from './myComponents/Header'
 import HeaderLinks from './myComponents/HeaderLinks'
-import ProfilePage from './views/ProfilePage/ProfilePage'
 
 export const App = () => {
     const dashboardRoutes = [];
@@ -29,6 +29,7 @@ export const App = () => {
                 <Route path="/login" component={LoginPage} />
                 <Route path="/signup" component={SignupPage} />
                 <Route path="/find" component={FindClimbers} />
+                <Route path="/profile/:id" component={ProfilePage} />
                 <Route path="/" component={LandingPage} />
             </Switch>
         </div>

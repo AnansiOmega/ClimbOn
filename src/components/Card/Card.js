@@ -32,5 +32,6 @@ Card.propTypes = {
   className: PropTypes.string,
   plain: PropTypes.bool,
   carousel: PropTypes.bool,
-  children: PropTypes.node
+  children: PropTypes.node,
+  user: PropTypes.object
 };

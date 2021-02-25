@@ -1,8 +1,8 @@
-const initialState = {}
+const initialState = []
 
-const userReducer = (state=initialState, action) => {
+const otherUserReducer = (state=initialState, action) => {
     switch(action.type){
-        case 'FETCH_USER_SUCCESS':
+        case'FETCH_USER_MATCHES_SUCCESS':
             return action.payload
         case 'LOGOUT_USER':
             return {}
@@ -11,4 +11,4 @@ const userReducer = (state=initialState, action) => {
         }
     }
 
-export default userReducer
+export default otherUserReducer

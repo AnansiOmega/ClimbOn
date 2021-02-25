@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from 'react-router-dom'
+import { useHistory, Link } from 'react-router-dom'
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
-import { thunkFetchRootUser } from '../Actions/user'
+import { thunkFetchUser } from '../Actions/user'
 import { thunkFetchAuthCurrentUser } from '../Actions/auth'
 // nodejs library that concatenates classes
 import classNames from "classnames";
@@ -31,17 +31,17 @@ export default function LandingPage(props) {
   const user = useSelector(state => state.user, shallowEqual)
   const [picAnimation, setPicAnimation] = useState('hidden-profile-pic')
   useEffect(() => {
-    setTimeout(() => setPicAnimation('profile-pic'), 2000)
+    setTimeout(() => setPicAnimation('profile-pic'), 1000)
   }, [])
   const dispatch = useDispatch()
   const history = useHistory()
   useEffect(() => {
-    const token = localStorage.getItem('myToken')
+  const token = localStorage.getItem('myToken')
     token ? dispatch(thunkFetchAuthCurrentUser(token)) : history.push('/login')
   },[])
 
   useEffect(() => {
-    dispatch(thunkFetchRootUser(auth.id))
+    dispatch(thunkFetchUser(auth.id))
   },[auth])
 
   const classes = useStyles();
@@ -50,7 +50,8 @@ export default function LandingPage(props) {
     classes.imgRoundedCircle,
     classes.imgFluid
   );
-  const { id, username, fname, lname, age, gender, climbing_preference, commitment, skill_level, bio, street, city, state, photo, password } = user
+  
+  const { id, fname, lname, climbing_preference, commitment, photo } = user
 
   const renderFriends = () => {
     if(!user.followers) return 
@@ -61,13 +62,16 @@ export default function LandingPage(props) {
   }
 
   const imgUrl = `http://localhost:3000/${photo}`
+  const profileUrl = `/profile/${id}`
   return (
     <div>
       <Parallax filter image={require("imgs/rock-climbing-pic.jpg")}>
         <section className='user-page-people'>
           {renderFriends()}
           <div className={picAnimation}>
+            <Link to={profileUrl} className='home-page-link'>
               <img src={imgUrl} alt="..." className={imageClasses} id='landing-page-pic'/>
+              </Link>
               <h4>
                 {`${fname} ${lname}`}
               </h4>

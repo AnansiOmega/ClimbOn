@@ -1,6 +1,6 @@
 /*eslint-disable*/
 import React from "react";
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { logoutUser } from '../Actions/auth'
 import { useHistory } from 'react-router-dom'
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -28,6 +28,7 @@ const useStyles = makeStyles(styles);
 export default function HeaderLinks(props) {
   const dispatch = useDispatch();
   const history = useHistory()
+  const rootUser = useSelector(state => state.auth)
 
   const handleLogout = () => {
     dispatch(logoutUser)
@@ -36,6 +37,7 @@ export default function HeaderLinks(props) {
   }
 
   const classes = useStyles();
+  const profilePageUrl = `/profile/${rootUser.id}`
   return (
     <List className={classes.list}>
       <ListItem className={classes.listItem}>
@@ -76,21 +78,13 @@ export default function HeaderLinks(props) {
             <DeleteIcon />
           </IconButton>
         </Tooltip>*/}
-        <Tooltip
-          id="instagram-twitter"
-          title="Follow us on twitter"
-          placement={window.innerWidth > 959 ? "top" : "left"}
-          classes={{ tooltip: classes.tooltip }}
-        >
-          <Button
-            href="https://twitter.com/CreativeTim?ref=creativetim"
-            target="_blank"
+          <Link
+            to={profilePageUrl}
             color="transparent"
             className={classes.navLink}
           >
-            <i className={classes.socialIcons + " fab fa-twitter"} />
-          </Button>
-        </Tooltip>
+            Profile
+          </Link>
       </ListItem>
       <ListItem className={classes.listItem}>
         <Tooltip

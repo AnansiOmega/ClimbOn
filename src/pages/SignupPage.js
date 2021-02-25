@@ -56,25 +56,25 @@ export default function LoginPage(props) {
   const handleInput = e => {
     switch(e.target.id){
       case 'username':
-          setUsername(e.target.value)
+          setUsername(e.target.value.toLowerCase())
       break;
       case 'password':
           setPassword(e.target.value)
       break;
       case 'fname':
-          setFname(e.target.value)
+          setFname(e.target.value.toLowerCase())
       break;
       case 'lname':
-          setLname(e.target.value)
+          setLname(e.target.value.toLowerCase())
       break;
       case 'age':
           setAge(e.target.value)
       break;
       case 'gender':
-          setGender(e.target.value)
+          setGender(e.target.value.toLowerCase())
       break;
       case 'climbing_preference':
-          setClimbing_preference(e.target.value)
+          setClimbing_preference(e.target.value.toLowerCase())
       break;
       case 'commitment':
           setCommitment(e.target.value)
@@ -111,7 +111,7 @@ export default function LoginPage(props) {
 
     for (const property in formState) {
         formData.append(
-            property, formState[property].toLowerCase()
+            property, formState[property]
         )
     }
 

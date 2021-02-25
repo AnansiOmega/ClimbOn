@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from "@material-ui/core/styles";
 import styles from "assets/jss/material-kit-react/views/landingPage.js";
+import { useHistory } from 'react-router-dom'
 import classNames from "classnames";
-import CustomInput from "components/CustomInput/CustomInput.js";
-import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import { thunkFetchUserMatches } from '../Actions/user'
+import { thunkFetchAuthCurrentUser } from '../Actions/auth'
+import { shallowEqual, useDispatch, useSelector } from 'react-redux'
+import UserCard from '../myComponents/UserCard'
+
 const useStyles = makeStyles(styles);
 
 
@@ -14,12 +19,23 @@ export const FindClimbers = () => {
     const [commitment, setCommitment] = useState('Any')
     const [skill_level, setSkill_level] = useState('Any')
     const [distance, setDistance] = useState('Any')
+    const dispatch = useDispatch()
+    const history = useHistory()
+    const matches = useSelector(state => state.otherUsers, shallowEqual)
+    const loader = useSelector(state => state.loader, shallowEqual)
+    const rootUser = useSelector(state => state.auth)
+
     useEffect(() => {
-        document.body.style.backgroundColor = 'purple'
+        document.body.style.backgroundColor = 'purple' // changes background color, because the white is blinding
         return () => {
             document.body.style.backgroundColor = 'white'
         }
     })
+    
+    useEffect(() => {
+        const token = localStorage.getItem('myToken')
+        token ? dispatch(thunkFetchAuthCurrentUser(token)) : history.push('/login')
+    },[])
 
     const handleInput = e => {
         switch(e.target.id){
@@ -44,19 +60,20 @@ export const FindClimbers = () => {
 
     const handleSubmit = e => {
         e.preventDefault()
+        const id = rootUser.id
         const reqObj = {
             method: 'POST',
             headers:{
                 'Content-Type' : 'application/json'
             },
-            body: JSON.stringify({climbing_preference, commitment, skill_level, gender, distance})
+            body: JSON.stringify({climbing_preference, commitment, skill_level, gender, distance, id})
         }
-        console.log('hi')
-        fetch('http://localhost:3000/find-climbers', reqObj)
-        .then( resp => resp.json())
-        .then( data => {
-            debugger
-        })
+        dispatch(thunkFetchUserMatches(reqObj))
+    }
+
+    const renderMatches = () => {
+        if(loader) return
+        return matches.map(user => <UserCard id={user.id} user={user}></UserCard>)
     }
 
     return(
@@ -115,15 +132,22 @@ export const FindClimbers = () => {
                             <FormGroup>
                                 <Label>Distance</Label>
                                 <Input type="select" id="distance" onChange={handleInput} value={distance}>
-                                <option>>25</option>
-                                <option>25-50</option>
-                                <option>50-100</option>
-                                <option>100+</option>
+                                <option>Any</option>
+                                <option>25</option>
+                                <option>50</option>
+                                <option>100</option>
+                                <option>150</option>
+                                <option>200</option>
                                 </Input>
                             </FormGroup>
                             <Button style={{margin: '15%'}}>Search</Button>
                         </div>
                     </Form>
+                    </div>
+                    <div className={classes.section}>
+                    <div className='grid-card-container'>
+                        {renderMatches()}
+                    </div>
                     </div>
                 </div>
             </div>

@@ -1,8 +1,8 @@
 import {loginErrors} from './user'
 
-export const fetchUserSuccess = (payload) => {
+export const fetchAuthUserSuccess = (payload) => {
     return {
-        type: 'FETCH_USER_SUCCESS',
+        type: 'FETCH_AUTH_USER_SUCCESS',
         payload
     }
 }
@@ -37,7 +37,7 @@ export const thunkFetchAuthorization = (username, password) => {
              return
             }
         localStorage.setItem('myToken', user.token)
-        dispatch(fetchUserSuccess(user))
+        dispatch(fetchAuthUserSuccess(user))
     })
     }
 }

@@ -1,4 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from 'react-redux'
+import { thunkFetchAuthCurrentUser } from '../Actions/auth'
+import { thunkFetchUser } from '../Actions/user'
+import { useHistory, useParams } from 'react-router-dom'
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // @material-ui/core components
@@ -35,14 +39,29 @@ import styles from "assets/jss/material-kit-react/views/profilePage.js";
 const useStyles = makeStyles(styles);
 
 export default function ProfilePage(props) {
+  const dispatch = useDispatch()
+  const history = useHistory()
+  const params = useParams()
+  useEffect(() => {
+    const token = localStorage.getItem('myToken')
+      token ? dispatch(thunkFetchAuthCurrentUser(token)) : history.push('/login')
+    },[])
+
+  useEffect(() => {
+    dispatch(thunkFetchUser(params["id"]))
+  },[params["id"]])
+  
   const classes = useStyles();
   const { ...rest } = props;
   const imageClasses = classNames(
     classes.imgRaised,
     classes.imgRoundedCircle,
     classes.imgFluid
-  );
+    );
+  const user = useSelector(state => state.user)
+  const { username, fname, lname, photo, climbing_preference, skill_level, bio} = user
   const navImageClasses = classNames(classes.imgRounded, classes.imgGallery);
+  const imgUrl = `http://localhost:3000/${photo}`
   return (
     <div>
       {/* <Header
@@ -56,7 +75,7 @@ export default function ProfilePage(props) {
         }}
         {...rest}
       /> */}
-      {/* <Parallax small filter image={require("assets/img/profile-bg.jpg")} /> */}
+      <Parallax small filter image={require("assets/img/profile-bg.jpg")} />
       <div className={classNames(classes.main, classes.mainRaised)}>
         <div>
           <div className={classes.container}>
@@ -64,11 +83,12 @@ export default function ProfilePage(props) {
               <GridItem xs={12} sm={12} md={6}>
                 <div className={classes.profile}>
                   <div>
-                    <img src={profile} alt="..." className={imageClasses} />
+                    <img src={imgUrl} alt="profile-picture" className={imageClasses} />
                   </div>
                   <div className={classes.name}>
-                    <h3 className={classes.title}>Christian Louboutin</h3>
-                    <h6>DESIGNER</h6>
+                    <h1 className={classes.title}>{`${fname} ${lname}`}</h1>
+                    <h3>{`(${username})`}</h3>
+                    <h2>{`Climbing ${climbing_preference} at a ${skill_level} level`}</h2>
                     <Button justIcon link className={classes.margin5}>
                       <i className={"fab fa-twitter"} />
                     </Button>
@@ -84,10 +104,7 @@ export default function ProfilePage(props) {
             </GridContainer>
             <div className={classes.description}>
               <p>
-                An artist of considerable range, Chet Faker — the name taken by
-                Melbourne-raised, Brooklyn-based Nick Murphy — writes, performs
-                and records all of his own music, giving it a warm, intimate
-                feel with a solid groove structure.{" "}
+                {bio}
               </p>
             </div>
             <GridContainer justify="center">
@@ -97,7 +114,7 @@ export default function ProfilePage(props) {
                   color="primary"
                   tabs={[
                     {
-                      tabButton: "Studio",
+                      tabButton: "Posts",
                       tabIcon: Camera,
                       tabContent: (
                         <GridContainer justify="center">
@@ -129,7 +146,7 @@ export default function ProfilePage(props) {
                       )
                     },
                     {
-                      tabButton: "Work",
+                      tabButton: "Pics",
                       tabIcon: Palette,
                       tabContent: (
                         <GridContainer justify="center">
@@ -166,7 +183,7 @@ export default function ProfilePage(props) {
                       )
                     },
                     {
-                      tabButton: "Favorite",
+                      tabButton: "Partners",
                       tabIcon: Favorite,
                       tabContent: (
                         <GridContainer justify="center">
