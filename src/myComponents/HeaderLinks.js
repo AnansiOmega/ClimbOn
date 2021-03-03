@@ -28,7 +28,8 @@ const useStyles = makeStyles(styles);
 export default function HeaderLinks(props) {
   const dispatch = useDispatch();
   const history = useHistory()
-  const rootUser = useSelector(state => state.auth)
+  const rootUser = useSelector(state => state.user)
+  
 
   const handleLogout = () => {
     dispatch(logoutUser)
@@ -87,14 +88,13 @@ export default function HeaderLinks(props) {
           </Link>
       </ListItem>
       <ListItem className={classes.listItem}>
-          <Button
+          <Link
+            to='/friend-requests'
             color="transparent"
-            href="https://www.facebook.com/CreativeTim?ref=creativetim"
-            target="_blank"
             className={classes.navLink}
           >
           <i className="material-icons">person_add</i>
-          </Button>
+          </Link>
       </ListItem>
       <ListItem className={classes.listItem}>
           <Button

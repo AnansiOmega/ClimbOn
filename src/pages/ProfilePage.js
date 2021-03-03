@@ -42,10 +42,6 @@ export default function ProfilePage(props) {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams()
-  useEffect(() => {
-    const token = localStorage.getItem('myToken')
-      token ? dispatch(thunkFetchAuthCurrentUser(token)) : history.push('/login')
-    },[])
 
   useEffect(() => {
     dispatch(thunkFetchUser(params["id"]))
@@ -58,6 +54,7 @@ export default function ProfilePage(props) {
     classes.imgRoundedCircle,
     classes.imgFluid
     );
+    
   const user = useSelector(state => state.user)
   const { username, fname, lname, photo, climbing_preference, skill_level, bio} = user
   const navImageClasses = classNames(classes.imgRounded, classes.imgGallery);

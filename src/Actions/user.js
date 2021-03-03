@@ -28,6 +28,19 @@ export const fetchUserMatchesSuccess = payload => {
     }
 }
 
+export const fetchFriendRequestsSuccess = payload => {
+    return { 
+        type: 'FETCH_FRIEND_REQUESTS_SUCCESS',
+        payload
+    }
+}
+
+export const clearOtherUsers = () => {
+    return { 
+        type: 'CLEAR_OTHER_USERS'
+    }
+}
+
 export const fetchUserMatchesStart = payload => {
     return { 
         type: 'FETCH_USER_MATCHES_START',
@@ -65,5 +78,12 @@ export const thunkFetchUserMatches = (reqObj) => {
         fetch('http://localhost:3000/find-climbers', reqObj)
         .then( resp => resp.json())
         .then( users => dispatch(fetchUserMatchesSuccess(users)))
+    }
+}
+export const thunkFetchFriendRequests = id => {
+    return (dispatch) => {
+        fetch(`http://localhost:3000/friend-requests/${id}`)
+        .then( resp => resp.json())
+        .then( users => dispatch(fetchFriendRequestsSuccess(users)))
     }
 }

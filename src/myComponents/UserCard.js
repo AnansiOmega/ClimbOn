@@ -19,23 +19,20 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 export default function Cards(props) {
-  const { climbing_preference, username, fname, lname, photo, skill_level, id } = props['user']
+  const { climbing_preference, username, fname, lname, photo, skill_level, id } = props['user']// for some reason props are sent as '{user: {blah: blah}}' I have to destructure this way
   const rootUser = useSelector(state => state.auth)
-  const handleConnectionReq = () => {
-    const root_user_id = rootUser.id
+  const handleFriendReq = () => {
+    const current_user_id = rootUser.id
     const reqObj = {
       method: 'POST',
       headers: {
         'Content-type': 'application/json'
       },
-      body: JSON.stringify({root_user_id, id})
+      body: JSON.stringify({current_user_id, user_id: id})
     }
-    fetch('http://localhost:3000/request-connection', reqObj)
-    .then( resp => resp.json())
-    .then( data => {
-      debugger
-    })
+    fetch('http://localhost:3000/friendships', reqObj)
   }
+  
   const classes = useStyles();
   const imgUrl = `http://localhost:3000/${photo}`
   const userProfileUrl = `/profile/${id}`
@@ -54,7 +51,7 @@ export default function Cards(props) {
         <h5>{`${fname} ${lname}`}</h5>
         <h5>{`Climbing ${climbing_preference}`}</h5>
         <h5>{`Grade: ${skill_level}`}</h5>
-        <Button onClick={handleConnectionReq} color="primary">Connect</Button>
+        <Button onClick={handleFriendReq} color="primary">Connect</Button>
       </CardBody>
     </Card>
   );

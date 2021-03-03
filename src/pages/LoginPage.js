@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { thunkFetchAuthorization, thunkFetchAuthCurrentUser } from '../Actions/auth'
+import { thunkFetchAuthorization } from '../Actions/auth'
 
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
@@ -46,7 +46,7 @@ export default function LoginPage(props) {
   },[auth])
   useEffect(() => {
     setLoginErrors(errors)
-  }, [errors])
+  },[errors])
   const [loginErrors, setLoginErrors] = useState([])
 
   const handleInput = e => {

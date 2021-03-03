@@ -34,11 +34,6 @@ export default function LandingPage(props) {
     setTimeout(() => setPicAnimation('profile-pic'), 1000)
   }, [])
   const dispatch = useDispatch()
-  const history = useHistory()
-  useEffect(() => {
-  const token = localStorage.getItem('myToken')
-    token ? dispatch(thunkFetchAuthCurrentUser(token)) : history.push('/login')
-  },[])
 
   useEffect(() => {
     dispatch(thunkFetchUser(auth.id))
@@ -54,10 +49,10 @@ export default function LandingPage(props) {
   const { id, fname, lname, climbing_preference, commitment, photo } = user
 
   const renderFriends = () => {
-    if(!user.followers) return 
-    return user.followers.map( person => {
+    if(!user.friends) return 
+    return user.friends.map( person => {
       const imgUrl = `http://localhost:3000/${person.photo}`    
-      return <div className={picAnimation}><img src={imgUrl} alt="..." className={imageClasses}  id='friends-landing-page-pic'/></div>
+      return <div className={picAnimation}><img src={imgUrl} alt="profile picture" className={imageClasses}  id='friends-landing-page-pic'/></div>
     }) 
   }
 
@@ -70,7 +65,7 @@ export default function LandingPage(props) {
           {renderFriends()}
           <div className={picAnimation}>
             <Link to={profileUrl} className='home-page-link'>
-              <img src={imgUrl} alt="..." className={imageClasses} id='landing-page-pic'/>
+              <img src={imgUrl} alt="profile picture" className={imageClasses} id='landing-page-pic'/>
               </Link>
               <h4>
                 {`${fname} ${lname}`}

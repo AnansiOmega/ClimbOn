@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from "@material-ui/core/styles";
 import styles from "assets/jss/material-kit-react/views/landingPage.js";
-import { useHistory } from 'react-router-dom'
 import classNames from "classnames";
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
-import { thunkFetchUserMatches } from '../Actions/user'
-import { thunkFetchAuthCurrentUser } from '../Actions/auth'
+import { thunkFetchUserMatches, clearOtherUsers } from '../Actions/user'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import UserCard from '../myComponents/UserCard'
 
@@ -20,21 +18,15 @@ export const FindClimbers = () => {
     const [skill_level, setSkill_level] = useState('Any')
     const [distance, setDistance] = useState('Any')
     const dispatch = useDispatch()
-    const history = useHistory()
     const matches = useSelector(state => state.otherUsers, shallowEqual)
     const loader = useSelector(state => state.loader, shallowEqual)
-    const rootUser = useSelector(state => state.auth)
 
     useEffect(() => {
+        dispatch(clearOtherUsers())
         document.body.style.backgroundColor = 'purple' // changes background color, because the white is blinding
         return () => {
             document.body.style.backgroundColor = 'white'
         }
-    })
-    
-    useEffect(() => {
-        const token = localStorage.getItem('myToken')
-        token ? dispatch(thunkFetchAuthCurrentUser(token)) : history.push('/login')
     },[])
 
     const handleInput = e => {
@@ -60,7 +52,7 @@ export const FindClimbers = () => {
 
     const handleSubmit = e => {
         e.preventDefault()
-        const id = rootUser.id
+        const id = localStorage.getItem('userId')
         const reqObj = {
             method: 'POST',
             headers:{

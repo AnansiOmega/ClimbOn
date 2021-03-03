@@ -105,7 +105,22 @@ export default function LoginPage(props) {
   
   const handleSubmit = e => {
     e.preventDefault()
-    let formState = {username, password, fname, lname, age, gender, climbing_preference, commitment, skill_level, bio, street, city, state, photo}
+    let formState = {
+      username,
+      password,
+      fname,
+      lname,
+      age,
+      gender,
+      climbing_preference,
+      commitment,
+      skill_level,
+      bio,
+      street,
+      city,
+      state,
+      photo
+    }
 
     const formData = new FormData()
 

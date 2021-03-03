@@ -37,6 +37,7 @@ export const thunkFetchAuthorization = (username, password) => {
              return
             }
         localStorage.setItem('myToken', user.token)
+        localStorage.setItem('userId', user.id)
         dispatch(fetchAuthUserSuccess(user))
     })
     }
