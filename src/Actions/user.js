@@ -80,6 +80,7 @@ export const thunkFetchUserMatches = (reqObj) => {
         .then( users => dispatch(fetchUserMatchesSuccess(users)))
     }
 }
+
 export const thunkFetchFriendRequests = id => {
     return (dispatch) => {
         fetch(`http://localhost:3000/friend-requests/${id}`)
@@ -87,3 +88,42 @@ export const thunkFetchFriendRequests = id => {
         .then( users => dispatch(fetchFriendRequestsSuccess(users)))
     }
 }
+
+export const thunkFetchAcceptReq = (user_id) => {
+    return (dispatch) => {
+        const current_user_id = localStorage.getItem('userId')
+        const reqObj = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({user_id, current_user_id})
+        }
+        
+        fetch('http://localhost:3000/accept-friend', reqObj)
+        .then( resp => resp.json())
+        .then( data => {
+          return 'wired up boss'
+        })
+    }
+}
+
+export const thunkFetchRejectReq = (user_id) => {
+    return (dispatch) => {
+        const current_user_id = localStorage.getItem('userId')
+        const reqObj = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({user_id, current_user_id})
+        }
+        
+        fetch('http://localhost:3000/reject-friend', reqObj)
+        .then( resp => resp.json())
+        .then( data => {
+          return 'wired up boss'
+        })
+    }
+}
+

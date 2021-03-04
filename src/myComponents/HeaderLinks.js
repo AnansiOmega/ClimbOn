@@ -15,7 +15,8 @@ import ListItem from "@material-ui/core/ListItem";
 import Tooltip from "@material-ui/core/Tooltip";
 
 // @material-ui/icons
-import { Apps, CloudDownload } from "@material-ui/icons";
+import { Apps } from "@material-ui/icons";
+import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 
 // core components
 import CustomDropdown from "components/CustomDropdown/CustomDropdown.js";
@@ -26,9 +27,10 @@ import styles from "assets/jss/material-kit-react/components/headerLinksStyle.js
 const useStyles = makeStyles(styles);
 
 export default function HeaderLinks(props) {
+  console.log(props)
   const dispatch = useDispatch();
   const history = useHistory()
-  const rootUser = useSelector(state => state.user)
+  const user = useSelector(state => state.user)
   
 
   const handleLogout = () => {
@@ -36,34 +38,11 @@ export default function HeaderLinks(props) {
     localStorage.removeItem('myToken')
     history.push('/login')
   }
-
+  
   const classes = useStyles();
-  const profilePageUrl = `/profile/${rootUser.id}`
+  const profilePageUrl = `/profile/${user.id}`
   return (
     <List className={classes.list}>
-      <ListItem className={classes.listItem}>
-        <CustomDropdown
-          noLiPadding
-          buttonText="Components"
-          buttonProps={{
-            className: classes.navLink,
-            color: "transparent"
-          }}
-          buttonIcon={Apps}
-          dropdownList={[
-            <Link to="/" className={classes.dropdownLink}>
-              All components
-            </Link>,
-            <a
-              href="https://creativetimofficial.github.io/material-kit-react/#/documentation?ref=mkr-navbar"
-              target="_blank"
-              className={classes.dropdownLink}
-            >
-              Documentation
-            </a>
-          ]}
-        />
-      </ListItem>
       <ListItem className={classes.listItem}>
         <Link
           to='/find'
@@ -79,21 +58,36 @@ export default function HeaderLinks(props) {
             <DeleteIcon />
           </IconButton>
         </Tooltip>*/}
+           <ListItem className={classes.listItem}>
+        <CustomDropdown
+          noLiPadding
+          user={user}
+          buttonText="Notifications"
+          buttonProps={{
+            className: classes.navLink,
+            color: "transparent"
+          }}
+          buttonIcon={ NotificationsActiveIcon }
+          dropdownList={[
+            <Link className={classes.dropdownLink}>
+              OtherStuff
+            </Link>,
+            <Link
+            to='/friend-requests'
+            color="transparent"
+            className={classes.navLink}
+          >
+          <i className="material-icons">person_add</i>
+          </Link>
+          ]}
+        />
+      </ListItem>
           <Link
             to={profilePageUrl}
             color="transparent"
             className={classes.navLink}
           >
             Profile
-          </Link>
-      </ListItem>
-      <ListItem className={classes.listItem}>
-          <Link
-            to='/friend-requests'
-            color="transparent"
-            className={classes.navLink}
-          >
-          <i className="material-icons">person_add</i>
           </Link>
       </ListItem>
       <ListItem className={classes.listItem}>

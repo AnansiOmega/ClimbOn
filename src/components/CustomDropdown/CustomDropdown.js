@@ -55,7 +55,8 @@ export default function CustomDropdown(props) {
     hoverColor,
     left,
     rtlActive,
-    noLiPadding
+    noLiPadding,
+    user
   } = props;
   const caretClasses = classNames({
     [classes.caret]: true,
@@ -94,6 +95,7 @@ export default function CustomDropdown(props) {
           {buttonText !== undefined ? buttonText : null}
           {caret ? <b className={caretClasses} /> : null}
         </Button>
+        { user.notifications ? <span>{user.notifications.length}</span> : null }
       </div>
       <Popper
         open={Boolean(anchorEl)}
@@ -183,6 +185,7 @@ CustomDropdown.propTypes = {
   buttonText: PropTypes.node,
   buttonIcon: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   dropdownList: PropTypes.array,
+  user: PropTypes.object,
   buttonProps: PropTypes.object,
   dropup: PropTypes.bool,
   dropdownHeader: PropTypes.node,
