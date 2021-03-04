@@ -54,24 +54,14 @@ export default function ProfilePage(props) {
     classes.imgRoundedCircle,
     classes.imgFluid
     );
+
+    const user = useSelector(state => state.user)
+    const { username, fname, lname, photo, climbing_preference, skill_level, bio, friends } = user
+    const navImageClasses = classNames(classes.imgRounded, classes.imgGallery);
+    const imgUrl = `http://localhost:3000/${photo}`
     
-  const user = useSelector(state => state.user)
-  const { username, fname, lname, photo, climbing_preference, skill_level, bio} = user
-  const navImageClasses = classNames(classes.imgRounded, classes.imgGallery);
-  const imgUrl = `http://localhost:3000/${photo}`
   return (
     <div>
-      {/* <Header
-        color="transparent"
-        brand="Material Kit React"
-        rightLinks={<HeaderLinks />}
-        fixed
-        changeColorOnScroll={{
-          height: 200,
-          color: "white"
-        }}
-        {...rest}
-      /> */}
       <Parallax small filter image={require("assets/img/profile-bg.jpg")} />
       <div className={classNames(classes.main, classes.mainRaised)}>
         <div>
@@ -184,7 +174,7 @@ export default function ProfilePage(props) {
                       tabIcon: Favorite,
                       tabContent: (
                         <GridContainer justify="center">
-                          <GridItem xs={12} sm={12} md={4}>
+                          {/* <GridItem xs={12} sm={12} md={4}>
                             <img
                               alt="..."
                               src={work4}
@@ -195,24 +185,7 @@ export default function ProfilePage(props) {
                               src={studio3}
                               className={navImageClasses}
                             />
-                          </GridItem>
-                          <GridItem xs={12} sm={12} md={4}>
-                            <img
-                              alt="..."
-                              src={work2}
-                              className={navImageClasses}
-                            />
-                            <img
-                              alt="..."
-                              src={work1}
-                              className={navImageClasses}
-                            />
-                            <img
-                              alt="..."
-                              src={studio1}
-                              className={navImageClasses}
-                            />
-                          </GridItem>
+                          </GridItem> */}
                         </GridContainer>
                       )
                     }

@@ -2,25 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useHistory, Link } from 'react-router-dom'
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { thunkFetchUser } from '../Actions/user'
-import { thunkFetchAuthCurrentUser } from '../Actions/auth'
+import FriendMessageCard from '../myComponents/FriendMessageCard'
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-
-// @material-ui/icons
-
-// core components
 // import Header from "components/Header/Header.js";
 import Footer from "components/Footer/Footer.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import GridItem from "components/Grid/GridItem.js";
-import Button from "components/CustomButtons/Button.js";
 // import HeaderLinks from "components/Header/HeaderLinks.js";
 import Parallax from "components/Parallax/Parallax.js";
-
 import styles from "assets/jss/material-kit-react/views/landingPage.js";
-
 // Sections for this page
 import FeedSection from "./FeedSection";
 
@@ -46,14 +37,21 @@ export default function LandingPage(props) {
     classes.imgFluid
   );
   
-  const { id, fname, lname, climbing_preference, commitment, photo } = user
+  const { id, fname, lname, climbing_preference, commitment, photo, friends } = user
 
   const renderFriends = () => {
-    if(!user.friends) return 
-    return user.friends.map( person => {
+    if(!friends) return 
+    return friends.map( person => {
       const imgUrl = `http://localhost:3000/${person.photo}`    
       return <div className={picAnimation}><img src={imgUrl} alt="profile picture" className={imageClasses}  id='friends-landing-page-pic'/></div>
     }) 
+  }
+
+  const renderConversations = () => {
+    if(!friends) return
+    return friends.map( user => {
+      return <FriendMessageCard user={user}/>
+    })
   }
 
   const imgUrl = `http://localhost:3000/${photo}`
@@ -78,6 +76,7 @@ export default function LandingPage(props) {
       </Parallax>
       <div className={classNames(classes.main, classes.mainRaised)}>
         <div className={classes.container}>
+          {renderConversations()}
           <FeedSection />
         </div>
       </div>

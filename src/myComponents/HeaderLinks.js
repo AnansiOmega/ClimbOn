@@ -77,7 +77,7 @@ export default function HeaderLinks(props) {
             color="transparent"
             className={classes.navLink}
           >
-          <i className="material-icons">person_add</i>
+          <i className="material-icons">person_add</i><span>Friend Requests</span>
           </Link>
           ]}
         />

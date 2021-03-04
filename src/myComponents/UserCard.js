@@ -1,5 +1,4 @@
-import React from "react";
-import { useSelector } from 'react-redux'
+import React, { useState } from "react";
 // material-ui components
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from 'react-router-dom'
@@ -7,6 +6,8 @@ import { Link } from 'react-router-dom'
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import Button from "components/CustomButtons/Button.js";
+import { useDispatch } from 'react-redux'
+import { thunkSendFriendReq } from '../Actions/user'
 
 import imagesStyles from "assets/jss/material-kit-react/imagesStyles.js";
 
@@ -19,23 +20,18 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 export default function Cards(props) {
+  const [friendReqSent, setFriendReqSent] = useState(false)
   const { climbing_preference, username, fname, lname, photo, skill_level, id } = props['user']// for some reason props are sent as '{user: {blah: blah}}' I have to destructure this way
-  const rootUser = useSelector(state => state.auth)
+  const dispatch = useDispatch()
   const handleFriendReq = () => {
-    const current_user_id = rootUser.id
-    const reqObj = {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify({current_user_id, user_id: id})
-    }
-    fetch('http://localhost:3000/friendships', reqObj)
+    dispatch(thunkSendFriendReq(id))
+    setFriendReqSent(true)
   }
-  
+
   const classes = useStyles();
   const imgUrl = `http://localhost:3000/${photo}`
   const userProfileUrl = `/profile/${id}`
+  let  color = friendReqSent ? '' : 'primary'
   return (
     <Card style={{width: "15rem", justifySelf: 'center'}}>
       <Link to={userProfileUrl}>
@@ -51,7 +47,7 @@ export default function Cards(props) {
         <h5>{`${fname} ${lname}`}</h5>
         <h5>{`Climbing ${climbing_preference}`}</h5>
         <h5>{`Grade: ${skill_level}`}</h5>
-        <Button onClick={handleFriendReq} color="primary">Connect</Button>
+        <Button disabled={friendReqSent} onClick={handleFriendReq} color={color}>{friendReqSent ? "Sent!" : "Add Friend"}</Button>
       </CardBody>
     </Card>
   );

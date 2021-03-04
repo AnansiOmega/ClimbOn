@@ -52,15 +52,7 @@ export const FindClimbers = () => {
 
     const handleSubmit = e => {
         e.preventDefault()
-        const id = localStorage.getItem('userId')
-        const reqObj = {
-            method: 'POST',
-            headers:{
-                'Content-Type' : 'application/json'
-            },
-            body: JSON.stringify({climbing_preference, commitment, skill_level, gender, distance, id})
-        }
-        dispatch(thunkFetchUserMatches(reqObj))
+        dispatch(thunkFetchUserMatches(climbing_preference, commitment, skill_level, gender, distance,))
     }
 
     const renderMatches = () => {
