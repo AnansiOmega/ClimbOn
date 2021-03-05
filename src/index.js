@@ -7,7 +7,8 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
 import rootReducer from './Reducers/index'
 import thunk from 'redux-thunk'
-
+import { API_WS_ROOT } from './constants/index'
+import { ActionCableProvider } from 'react-actioncable-provider'
 import './assets/css/app.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "assets/scss/material-kit-react.scss?v=1.9.0";
@@ -22,7 +23,9 @@ const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)))
 ReactDOM.render(
   <Provider store={store}>
     <Router history={hist}>
-      <App />
+      <ActionCableProvider url={API_WS_ROOT}>
+        <App />
+      </ActionCableProvider>
     </Router>
   </Provider>,
   document.getElementById("root")

@@ -11,8 +11,9 @@ import IconButton from "@material-ui/core/IconButton";
 import Close from "@material-ui/icons/Close";
 // core components
 import Button from "components/CustomButtons/Button.js";
-import { FormGroup, Input } from 'reactstrap'
+import { FormGroup, Input, Form } from 'reactstrap'
 import modalStyle from "../assets/jss/material-kit-react/modalStyle";
+import { ActionCable } from 'react-actioncable-provider'
 
 const useStyles = makeStyles(modalStyle);
 
@@ -43,14 +44,7 @@ export default function Modal(props) {
             body: JSON.stringify({current_user_id, user_id: id})
         }
         fetch('http://localhost:3000/conversations', reqObj)
-            .then(resp => resp.json())
-            .then(conversation => {
-                console.log(conversation)
-                setConversationId(conversation.id)
-                // setUserId(conversation.sender_id)
-                setMessages(conversation.messages)
-                setModal(true)
-            })
+        setModal(true)
     }
 
 
@@ -66,15 +60,22 @@ export default function Modal(props) {
         }
         
         fetch('http://localhost:3000/messages', reqObj)
-        .then( resp => resp.json())
-        .then( data => {
-            debugger
-        })
         setBody('')
     }
 
+    const handleReceivedConversation = conversationData => {
+      const { id, messages } = conversationData.conversation
+      console.log(messages)
+      setMessages(messages)
+      setConversationId(id)
+    }
+    const handleNewMessages = newMessage => {
+      console.log(newMessage.message)
+      setMessages([...messages, newMessage.message])
+    }
+    
     const renderMessages = () => {
-        return messages.map(message => <p>{`${message.user.fname}:    ${message.body}`}</p>)
+      return messages.map(message => <p>{`${message.fname}:    ${message.body}`}</p>)
     }
     
   return (
@@ -114,11 +115,22 @@ export default function Modal(props) {
           id="modal-slide-description"
           className={classes.modalBody}
         >
+          <ActionCable
+            channel={{ channel: 'ConversationsChannel'}}
+            onReceived={handleReceivedConversation}
+            />
+          <ActionCable
+            channel={{ channel: 'MessagesChannel', conversation_id}}
+            onReceived={handleNewMessages}
+            />
+
             {renderMessages()}
-        <FormGroup style={{display: 'flex', alignItems:'center'}}>
-            <Input type="text" name="message" placeholder="send a message" onChange={e => setBody(e.target.value)} value={body}/>
-            <Button onClick={sendMessage}>Send</Button>
-        </FormGroup>
+          <Form onSubmit={sendMessage}>
+            <FormGroup style={{ display: 'flex', alignItems: 'center' }}>
+              <Input type="text" name="message" placeholder="send a message" onChange={e => setBody(e.target.value)} value={body} />
+              <Button type='submit'>Send</Button>
+            </FormGroup>
+        </Form>
         </DialogContent>
         <DialogActions
           className={classes.modalFooter + " " + classes.modalFooterCenter}
