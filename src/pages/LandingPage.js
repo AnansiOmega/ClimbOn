@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { thunkFetchUser } from '../Actions/user'
-import FriendMessageCard from '../myComponents/FriendMessageCard'
+
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // @material-ui/core components
@@ -47,13 +47,6 @@ export default function LandingPage(props) {
     }) 
   }
 
-  const renderConversations = () => {
-    if(!friends) return
-    return friends.map( user => {
-      return <FriendMessageCard user={user}/>
-    })
-  }
-
   const imgUrl = `http://localhost:3000/${photo}`
   const profileUrl = `/profile/${id}`
   return (
@@ -76,7 +69,6 @@ export default function LandingPage(props) {
       </Parallax>
       <div className={classNames(classes.main, classes.mainRaised)}>
         <div className={classes.container}>
-          {renderConversations()}
           <FeedSection />
         </div>
       </div>

@@ -10,6 +10,7 @@ import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import Header from './myComponents/Header'
 import HeaderLinks from './myComponents/HeaderLinks'
+import {MessageBar} from './myComponents/MessageBar'
 
 export const App = () => {
     const dispatch = useDispatch()
@@ -26,7 +27,7 @@ export const App = () => {
             <Header
                 color="transparent"
                 routes={dashboardRoutes}
-                brand="Material Kit React"
+                brand="Climb on"
                 rightLinks={<HeaderLinks />}
                 fixed
                 changeColorOnScroll={{
@@ -42,6 +43,7 @@ export const App = () => {
                 <Route path="/friend-requests" component={FriendRequestPage} />
                 <Route exact path="/" component={LandingPage} />
             </Switch>
+            <MessageBar/>
         </div>
     )
 }

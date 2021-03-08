@@ -24,28 +24,29 @@ const useStyles = makeStyles(styles);
 export default function Cards(props) {
 const [convoStarted, setConvoStarted] = useState(false)
 const user = props['user']
-const { id, fname, climbing_preference, commitment, photo, skill_level } = user
+const { id, fname, username, lname, climbing_preference, commitment, photo, skill_level } = user
 const dispatch = useDispatch()
 const classes = useStyles()
 
 const imgUrl = `http://localhost:3000/${photo}`;
 const userProfileUrl = `/profile/${id}`
   return (
-    <Card className={classes.textCenter} style={{ flexDirection: 'row'}}>
-      <Link to={userProfileUrl} style={{margin: '2%'}}>
+    <Card style={{width: "10rem", height:'auto', justifySelf: 'center', alignItems: 'center'}}>
+      <Link to={userProfileUrl}>
       <img
-        style={{height: "auto", width: "4rem", borderRadius: "50%"}}
+        style={{height: "7rem", width: "100%", display: "block"}}
+        className={classes.imgCardTop}
         src={imgUrl}
         alt="Card-img-cap"
       />
       </Link>
-      <CardBody style={{alignSelf: 'center'}} >
+      <CardBody>
         <h4 className={classes.cardTitle}>{fname}</h4>
-        {convoStarted ? <div>{"hi"}</div> : null}
+        <h4 className={classes.cardTitle}>{lname}</h4>
+        <div style={{ display: 'flex', flexDirection:'column', alignSelf: 'center', marginRight: '2%'}}> 
+        <MessageModal user={user} style={{alignSelf: 'flex-end'}}/>
+        </div>
       </CardBody>
-      <div style={{ display: 'flex', flexDirection:'column', alignSelf: 'center', marginRight: '2%'}}> 
-        <MessageModal user={user}/>
-      </div>
     </Card>
   );
 }

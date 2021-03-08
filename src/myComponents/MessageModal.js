@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 // material-ui components
 import {makeStyles} from "@material-ui/core/styles";
 import Slide from "@material-ui/core/Slide";
@@ -13,7 +13,7 @@ import Close from "@material-ui/icons/Close";
 import Button from "components/CustomButtons/Button.js";
 import { FormGroup, Input, Form } from 'reactstrap'
 import modalStyle from "../assets/jss/material-kit-react/modalStyle";
-import { ActionCable } from 'react-actioncable-provider'
+import { ActionCableConsumer } from 'react-actioncable-provider'
 
 const useStyles = makeStyles(modalStyle);
 
@@ -26,11 +26,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function Modal(props) {
     const user = props['user'] // annoying bug that happens when using these styled components
-    const { id } = user
+    const { id, fname } = user
     const [modal, setModal] = useState(false);
     const [body, setBody] = useState('')
     const [messages, setMessages] = useState([])
-    const [conversation_id, setConversationId] = useState('')
+    const [conversation_id, setConversationId] = useState(null)
+    const typingInput = useRef(null)
+    const endOfMessages = useRef(null)
 
     const classes = useStyles();
 
@@ -61,27 +63,32 @@ export default function Modal(props) {
         
         fetch('http://localhost:3000/messages', reqObj)
         setBody('')
-    }
+        typingInput.current.focus()
+      }
+      
+      const handleReceivedConversation = conversationData => {
+        const { id, messages } = conversationData.conversation
+        setMessages(messages)
+        setConversationId(id)
+        endOfMessages.current.scrollIntoView({ behavior: 'smooth' })
+      }
 
-    const handleReceivedConversation = conversationData => {
-      const { id, messages } = conversationData.conversation
-      console.log(messages)
-      setMessages(messages)
-      setConversationId(id)
-    }
-    const handleNewMessages = newMessage => {
-      console.log(newMessage.message)
-      setMessages([...messages, newMessage.message])
+      
+      const handleNewMessages = newMessage => {
+        let newMessages = messages.filter(message => message.id !== newMessage.message.id)
+        newMessages.push(newMessage.message)
+        setMessages(newMessages)
+        endOfMessages.current.scrollIntoView({ behavior: 'smooth' })
     }
     
     const renderMessages = () => {
       return messages.map(message => <p>{`${message.fname}:    ${message.body}`}</p>)
     }
-    
+
   return (
     <div>
-        <Button color="rose" round onClick={handleStartConvo}>
-          Message!
+        <Button color={props.type === 'MessageBar' ? 'primary' : 'rose'} round onClick={handleStartConvo}>
+          {props.type === 'MessageBar' ? fname : 'Message!'}
         </Button>
       <Dialog
         classes={{
@@ -109,25 +116,25 @@ export default function Modal(props) {
           >
             <Close className={classes.modalClose} />
           </IconButton>
-          <h4 className={classes.modalTitle}>Your conversation with Gortat</h4>
+          <h4 className={classes.modalTitle}>{`Your conversation with ${fname}`}</h4>
         </DialogTitle>
         <DialogContent
           id="modal-slide-description"
           className={classes.modalBody}
         >
-          <ActionCable
+          <ActionCableConsumer
+          channel={{ channel: 'MessagesChannel', conversation_id}}
+          onReceived={handleNewMessages}
+          />
+          <ActionCableConsumer
             channel={{ channel: 'ConversationsChannel'}}
             onReceived={handleReceivedConversation}
             />
-          <ActionCable
-            channel={{ channel: 'MessagesChannel', conversation_id}}
-            onReceived={handleNewMessages}
-            />
-
             {renderMessages()}
+            <div ref={endOfMessages}></div>
           <Form onSubmit={sendMessage}>
             <FormGroup style={{ display: 'flex', alignItems: 'center' }}>
-              <Input type="text" name="message" placeholder="send a message" onChange={e => setBody(e.target.value)} value={body} />
+              <Input ref={typingInput} type="text" name="message" placeholder="send a message" onChange={e => setBody(e.target.value)} value={body} />
               <Button type='submit'>Send</Button>
             </FormGroup>
         </Form>

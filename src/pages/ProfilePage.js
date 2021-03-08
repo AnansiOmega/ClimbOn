@@ -17,6 +17,7 @@ import Footer from "components/Footer/Footer.js";
 import Button from "components/CustomButtons/Button.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
+import FriendMessageCard from '../myComponents/FriendMessageCard'
 // import HeaderLinks from "components/Header/HeaderLinks.js";
 import NavPills from "components/NavPills/NavPills.js";
 import Parallax from "components/Parallax/Parallax.js";
@@ -59,6 +60,14 @@ export default function ProfilePage(props) {
     const { username, fname, lname, photo, climbing_preference, skill_level, bio, friends } = user
     const navImageClasses = classNames(classes.imgRounded, classes.imgGallery);
     const imgUrl = `http://localhost:3000/${photo}`
+
+    const renderConversations = () => {
+      if(!friends) return
+      return friends.map( user => {
+        return <FriendMessageCard user={user}/>
+      })
+    }
+  
     
   return (
     <div>
@@ -173,20 +182,9 @@ export default function ProfilePage(props) {
                       tabButton: "Partners",
                       tabIcon: Favorite,
                       tabContent: (
-                        <GridContainer justify="center">
-                          {/* <GridItem xs={12} sm={12} md={4}>
-                            <img
-                              alt="..."
-                              src={work4}
-                              className={navImageClasses}
-                            />
-                            <img
-                              alt="..."
-                              src={studio3}
-                              className={navImageClasses}
-                            />
-                          </GridItem> */}
-                        </GridContainer>
+                        <div className='profile-page-friend-container'>
+                          {renderConversations()}
+                        </div>
                       )
                     }
                   ]}
