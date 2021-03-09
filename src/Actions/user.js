@@ -41,10 +41,21 @@ export const clearOtherUsers = () => {
     }
 }
 
-export const fetchUserMatchesStart = payload => {
+export const fetchUserMatchesStart = () => {
     return { 
         type: 'FETCH_USER_MATCHES_START',
-        payload
+    }
+}
+
+export const handleConversationFetch = () => {
+    return { 
+        type: 'HANDLE_CONVERSATION_FETCH'
+    }
+}
+
+export const handleConversationFetchSuccess = () => {
+    return { 
+        type: 'HANDLE_CONVERSATION_FETCH_SUCCESS'
     }
 }
 
@@ -142,3 +153,20 @@ export const thunkFetchRejectReq = (user_id) => {
     }
 }
 
+
+export const thunkHandleStartConvo = (user_id) => {
+    return (dispatch) => {
+        dispatch(handleConversationFetch())
+        const current_user_id = localStorage.getItem('userId')
+        const reqObj = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({current_user_id, user_id})
+        }
+
+        fetch('http://localhost:3000/conversations', reqObj)
+        .then(() => dispatch(handleConversationFetchSuccess()))
+    }
+}

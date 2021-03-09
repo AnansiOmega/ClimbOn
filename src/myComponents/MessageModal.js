@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 // material-ui components
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Slide from "@material-ui/core/Slide";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -14,8 +14,14 @@ import Button from "components/CustomButtons/Button.js";
 import { FormGroup, Input, Form } from 'reactstrap'
 import modalStyle from "../assets/jss/material-kit-react/modalStyle";
 import { ActionCableConsumer } from 'react-actioncable-provider'
+import { useDispatch } from 'react-redux'
+import { thunkHandleStartConvo } from '../Actions/user'
+import { ContactSupportOutlined } from '@material-ui/icons';
+
+
 
 const useStyles = makeStyles(modalStyle);
+
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -33,25 +39,17 @@ export default function Modal(props) {
     const [conversation_id, setConversationId] = useState(null)
     const typingInput = useRef(null)
     const endOfMessages = useRef(null)
-
+    const dispatch = useDispatch()
     const classes = useStyles();
 
     const handleStartConvo = () => {
-        const current_user_id = localStorage.getItem('userId')
-        const reqObj = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({current_user_id, user_id: id})
-        }
-        fetch('http://localhost:3000/conversations', reqObj)
-        setModal(true)
+      dispatch(thunkHandleStartConvo(id))
+      setModal(true)
     }
 
 
     const sendMessage = e => {
-        const user_id = localStorage.getItem('userId')
+        const user_id = localStorage.getItem('userId')// thunk this next time. 
         e.preventDefault()
         const reqObj = {
             method: 'POST',
@@ -85,11 +83,13 @@ export default function Modal(props) {
       return messages.map(message => <p>{`${message.fname}:    ${message.body}`}</p>)
     }
 
+
+
   return (
     <div>
-        <Button color={props.type === 'MessageBar' ? 'primary' : 'rose'} round onClick={handleStartConvo}>
-          {props.type === 'MessageBar' ? fname : 'Message!'}
-        </Button>
+      <Button color={props.type === 'MessageBar' ? 'primary' : 'rose'} round onClick={handleStartConvo}>
+        {props.type === 'MessageBar' ? fname : 'Message!'}
+      </Button>
       <Dialog
         classes={{
           root: classes.center,
@@ -123,21 +123,21 @@ export default function Modal(props) {
           className={classes.modalBody}
         >
           <ActionCableConsumer
-          channel={{ channel: 'MessagesChannel', conversation_id}}
-          onReceived={handleNewMessages}
+            channel={{ channel: 'MessagesChannel', conversation_id }}
+            onReceived={handleNewMessages}
           />
           <ActionCableConsumer
-            channel={{ channel: 'ConversationsChannel'}}
+            channel={{ channel: 'ConversationsChannel' }}
             onReceived={handleReceivedConversation}
-            />
-            {renderMessages()}
-            <div ref={endOfMessages}></div>
+          />
+          {renderMessages()}
+          <div ref={endOfMessages}></div>
           <Form onSubmit={sendMessage}>
             <FormGroup style={{ display: 'flex', alignItems: 'center' }}>
               <Input ref={typingInput} type="text" name="message" placeholder="send a message" onChange={e => setBody(e.target.value)} value={body} />
               <Button type='submit'>Send</Button>
             </FormGroup>
-        </Form>
+          </Form>
         </DialogContent>
         <DialogActions
           className={classes.modalFooter + " " + classes.modalFooterCenter}
@@ -147,3 +147,29 @@ export default function Modal(props) {
     </div>
   );
 }
+
+// import { makeStyles } from '@material-ui/core/styles';
+
+// export default function SimpleBackdrop() {
+//   const classes = useStyles();
+//   const [open, setOpen] = React.useState(false);
+//   const handleClose = () => {
+//     setOpen(false);
+//   };
+//   const handleToggle = () => {
+//     setOpen(!open);
+//   };
+
+//   return (
+//     <div>
+//       <Button variant="outlined" color="primary" onClick={handleToggle}>
+//         Show backdrop
+//       </Button>
+//       <Backdrop className={classes.backdrop} open={open} onClick={handleClose}>
+//         <CircularProgress color="inherit" />
+//       </Backdrop>
+//     </div>
+//   );
+// }
+
+      

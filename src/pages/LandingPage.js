@@ -14,6 +14,9 @@ import Parallax from "components/Parallax/Parallax.js";
 import styles from "assets/jss/material-kit-react/views/landingPage.js";
 // Sections for this page
 import FeedSection from "./FeedSection";
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { setGlobalCssModule } from "reactstrap/es/utils";
 
 const useStyles = makeStyles(styles);
 
@@ -29,6 +32,8 @@ export default function LandingPage(props) {
   useEffect(() => {
     dispatch(thunkFetchUser(auth.id))
   },[auth])
+
+  const loader = useSelector(state => state.loader, shallowEqual)
 
   const classes = useStyles();
   const imageClasses = classNames(
@@ -51,6 +56,9 @@ export default function LandingPage(props) {
   const profileUrl = `/profile/${id}`
   return (
     <div>
+      <Backdrop className={classes.backdrop} open={loader}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <Parallax filter image={require("imgs/rock-climbing-pic.jpg")}>
         <section className='user-page-people'>
           {renderFriends()}

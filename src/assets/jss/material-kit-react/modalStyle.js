@@ -49,7 +49,12 @@ const modalStyle = {
   modalFooterCenter: {
     marginLeft: "auto",
     marginRight: "auto"
-  }
+  },
+    backdrop: {
+    zIndex: '5',
+    color: '#fff',
+  },
+  
 };
 
 export default modalStyle;

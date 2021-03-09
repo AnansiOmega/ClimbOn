@@ -40,6 +40,11 @@ const landingPageStyle = {
     marginLeft: "auto",
     marginRight: "auto"
   },
+  backdrop: {
+    zIndex: 10000, // I have no idea how far to zindex this, I should come back to this
+    color: '#fff'
+  }
+
 };
 
 export default landingPageStyle;

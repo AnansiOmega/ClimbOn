@@ -9,6 +9,10 @@ const loaderReducer = (state=false, action) => {
             return true
         case 'FETCH_USER_MATCHES_SUCCESS':
             return false
+        case 'HANDLE_CONVERSATION_FETCH':
+            return true
+        case 'HANDLE_CONVERSATION_FETCH_SUCCESS':
+            return false
         default:
             return state
         }
