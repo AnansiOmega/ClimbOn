@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 // material-ui components
 import { makeStyles } from "@material-ui/core/styles";
 import Slide from "@material-ui/core/Slide";
@@ -37,6 +37,7 @@ export default function Modal(props) {
     const [body, setBody] = useState('')
     const [messages, setMessages] = useState([])
     const [conversation_id, setConversationId] = useState(null)
+    const [notificationDeleted, setNotificationDeleted] = useState(false)
     const typingInput = useRef(null)
     const endOfMessages = useRef(null)
     const dispatch = useDispatch()
@@ -83,13 +84,35 @@ export default function Modal(props) {
       return messages.map(message => <p>{`${message.fname}:    ${message.body}`}</p>)
     }
 
+    const deleteNotification = () => {
+      const current_user_id = localStorage.getItem('userId')// thunk this next time. 
+      const reqObj = {
+        method: 'POST',
+        headers: {
+          'Content-Type' : 'application/json'
+        },
+        body: JSON.stringify({user_id: id, current_user_id})
+      }
+
+      fetch('http://localhost:3000/message-notification', reqObj)
+      setNotificationDeleted(true)
+
+    }
+
 
 
   return (
     <div>
-      <Button color={props.type === 'MessageBar' ? 'primary' : 'rose'} round onClick={handleStartConvo}>
+      { notificationDeleted ? null :
+      <Button style={props.type === 'MessageBar' ? { borderRadius: '30px 0 0 30px', width: '5rem' } : null} color={ props.type === 'MessageBar' ? 'primary' : 'rose' } onClick={handleStartConvo}>
         {props.type === 'MessageBar' ? fname : 'Message!'}
       </Button>
+      }
+      { props.type === 'MessageBar' && !notificationDeleted ?
+      <Button onClick={deleteNotification} style={{ borderRadius: '0 30px 30px 0', padding: '12px', width: '1rem' }} color='rose'>
+        x
+      </Button>
+       : null }
       <Dialog
         classes={{
           root: classes.center,
@@ -147,29 +170,3 @@ export default function Modal(props) {
     </div>
   );
 }
-
-// import { makeStyles } from '@material-ui/core/styles';
-
-// export default function SimpleBackdrop() {
-//   const classes = useStyles();
-//   const [open, setOpen] = React.useState(false);
-//   const handleClose = () => {
-//     setOpen(false);
-//   };
-//   const handleToggle = () => {
-//     setOpen(!open);
-//   };
-
-//   return (
-//     <div>
-//       <Button variant="outlined" color="primary" onClick={handleToggle}>
-//         Show backdrop
-//       </Button>
-//       <Backdrop className={classes.backdrop} open={open} onClick={handleClose}>
-//         <CircularProgress color="inherit" />
-//       </Backdrop>
-//     </div>
-//   );
-// }
-
-      

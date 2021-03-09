@@ -14,6 +14,7 @@ import Parallax from "components/Parallax/Parallax.js";
 import styles from "assets/jss/material-kit-react/views/landingPage.js";
 // Sections for this page
 import FeedSection from "./FeedSection";
+import CreatePostSection from '../myComponents/CreatePostSection'
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { setGlobalCssModule } from "reactstrap/es/utils";
@@ -77,6 +78,7 @@ export default function LandingPage(props) {
       </Parallax>
       <div className={classNames(classes.main, classes.mainRaised)}>
         <div className={classes.container}>
+          <CreatePostSection />
           <FeedSection />
         </div>
       </div>
