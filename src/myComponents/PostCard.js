@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { postCommentsFetchSuccess, createNewCommentSuccess } from '../Actions/post'
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -18,6 +19,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import TextField from '@material-ui/core/TextField';
 import Button from "components/CustomButtons/Button.js";
+import { CommentCard } from './CommentCard'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -36,81 +38,95 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     width: theme.spacing(7),
-    height: theme.spacing(7)
+    height: theme.spacing(7),
+    gridRowStart: '1',
+    gridColumnStart: '1'
   },
 }));
 
 export default function PostCard(props) {
   const classes = useStyles();
-  const {user_id, content, id } = props["post"]
+  const { content, id, user, likes, time_posted } = props["post"]
   const [expanded, setExpanded] = React.useState(false);
-  const [poster, setPoster] = useState({})
-  const [comments, setComments] = useState([])
+  const [liked, setLiked] = useState(false)
+  const [likeCount, setLikeCount] = useState(likes.length)
   const [newComment, setNewComment] = useState('')
-  const user = useSelector(state => state.user)
-  useEffect(() => { // finds the friend associated with the post, so I can use their info to flourish the card
-    if(!user.friends) return
-    let friend = user.friends.find(friend => friend.id === user_id)
-    console.log(friend)
-    friend ? setPoster(friend) : setPoster(user)
-  },[user])
-
+  const dispatch = useDispatch()
+  const rootUser = useSelector(state => state.user)
+  const comments = useSelector(state => state.comments)
+  useEffect(() => {
+    likes.forEach( like => {
+      if(like.user.id === rootUser.id){
+        setLiked(true)
+      }
+    })
+  })
 
   const handleShowComments = () => {
-    fetch(`http://localhost:3000/posts/${id}`)
+    fetch(`http://localhost:3000/show-comments/${id}`)
     .then(resp => resp.json())
-    .then(post => {
-      setComments(post.comments)
+    .then(comments => {
+      dispatch(postCommentsFetchSuccess(comments))
     })
     setExpanded(!expanded);
   };
 
   const handleSubmitNewComment = () => {
-    const user_id = localStorage.getItem('userId')
     const reqObj = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ post_id: id, content: newComment, user_id})
+      body: JSON.stringify({ post_id: id, content: newComment, user_id: rootUser.id})
     }
 
     fetch('http://localhost:3000/comments', reqObj)
     .then(resp => resp.json())
-    .then(data => {
-      console.log(data)
+    .then(newComment => {
+      dispatch(createNewCommentSuccess(newComment))
     })
     setNewComment('')
   }
 
   const renderComments = () => {
-    return comments.map( comment => {
-      const commentImgUrl = `http://localhost:3000/${comment.user.photo}`
-    return <div className='comment-card'>
-      <Avatar className={classes.avatar} src={commentImgUrl}/>
-      <Typography paragraph>{comment.content}</Typography>
-      </div>
-  })
+    return comments.map(comment => {
+      return <CommentCard comment={comment} />
+    })
   }
 
-  const imgUrl = `http://localhost:3000/${poster.photo}`
+  const handleLikePost = () => {
+    const reqObj = {
+      method: 'POST',
+      headers: { 
+        'Content-Type' : 'application/json'
+      },
+      body: JSON.stringify({ post_id: id, user_id: rootUser.id })
+
+    }
+    fetch('http://localhost:3000/likes', reqObj)
+    setLiked(true)
+    setLikeCount(likeCount + 1)
+  }
+
+  const imgUrl = `http://localhost:3000/${user.photo}`
   return (
     <Card className={classes.root}>
       <CardHeader
         avatar={
           <Avatar className={classes.avatar} src={imgUrl}/>
         }
-        title={poster.fname}
-        subheader="September 14, 2016"
+        title={user.fname}
+        subheader={time_posted}
       />
       <CardContent>
-        <Typography variant="body2" color="textSecondary" component="p">
+        <Typography variant="h5" color="textPrimary">
           {content}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
+        <IconButton aria-label="like" onClick={handleLikePost} disabled={liked}>
+          <FavoriteIcon style={ liked ? {color: 'red'} : null } />
+          {likeCount}
         </IconButton>
         <IconButton
           className={clsx(classes.expand, {
@@ -129,7 +145,7 @@ export default function PostCard(props) {
           {renderComments()}
           <TextField
           label="Comment"
-          style={{ margin: 8 }}
+          style={{ margin: 8, marginTop: '5%'}}
           placeholder="..."
           fullWidth
           margin="normal"
