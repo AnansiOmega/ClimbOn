@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux'
-import { createNewPostSuccess } from '../Actions/post'
+import { thunkCreatePost } from '../Actions/post'
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from "components/CustomButtons/Button.js";
@@ -29,19 +29,7 @@ export default function MultilineTextFields() {
   const dispatch = useDispatch()
 
   const handleCreatePost = () => {
-    const user_id = localStorage.getItem('userId')
-      const reqObj = {
-          method: 'POST', 
-          headers: {
-              'Content-Type' : 'application/json'
-          },
-          body: JSON.stringify({ user_id, content })
-      }
-      fetch('http://localhost:3000/posts', reqObj)
-      .then(resp => resp.json())
-      .then( newPost => {
-        dispatch(createNewPostSuccess(newPost))
-      })
+      dispatch(thunkCreatePost(content))
       setContent('')
   }
 

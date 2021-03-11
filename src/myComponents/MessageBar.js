@@ -28,17 +28,16 @@ const useStyles = makeStyles({
 
   
 export const MessageBar = () => {
-    const [value, setValue] = useState('')
     const [unreadMessages, setUnreadMessages] = useState([])
     const classes = useStyles();
     const user = useSelector(state => state.user)
     useEffect(() => {
-      if(!user.id) return 
+      if(!user.id) return  /// filters out messages to only show the new messages, to update whether there should be new message button
         let notifications = user.notifications?.filter( notification => notification.notice_type === 'newMessage')
         let messages = notifications.map( notification => {
           return user.friends.find(friend => friend.id === notification.notice_id)
         })
-        setUnreadMessages(Array.from(new Set(messages)))
+        setUnreadMessages(Array.from(new Set(messages)))// doesn't matter how many messages from the same person, just have a bubble
     },[user])
 
     const renderUnreadMessages = () => {

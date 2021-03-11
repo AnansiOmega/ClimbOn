@@ -22,10 +22,8 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 export default function Cards(props) {
-const [convoStarted, setConvoStarted] = useState(false)
 const user = props['user']
-const { id, fname, username, lname, climbing_preference, commitment, photo, skill_level } = user
-const dispatch = useDispatch()
+const { id, fname, lname, photo } = user
 const classes = useStyles()
 
 const imgUrl = `http://localhost:3000/${photo}`;

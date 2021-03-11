@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux'
-import { postCommentsFetchSuccess, createNewCommentSuccess } from '../Actions/post'
+import { thunkFetchComments, thunkSubmitNewComment, thunkAddLikeToPost } from '../Actions/post'
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -63,28 +63,12 @@ export default function PostCard(props) {
   })
 
   const handleShowComments = () => {
-    fetch(`http://localhost:3000/show-comments/${id}`)
-    .then(resp => resp.json())
-    .then(comments => {
-      dispatch(postCommentsFetchSuccess(comments))
-    })
+    dispatch(thunkFetchComments(id))
     setExpanded(!expanded);
   };
 
   const handleSubmitNewComment = () => {
-    const reqObj = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ post_id: id, content: newComment, user_id: rootUser.id})
-    }
-
-    fetch('http://localhost:3000/comments', reqObj)
-    .then(resp => resp.json())
-    .then(newComment => {
-      dispatch(createNewCommentSuccess(newComment))
-    })
+    dispatch(thunkSubmitNewComment(id, newComment, rootUser.id))
     setNewComment('')
   }
 
@@ -95,15 +79,7 @@ export default function PostCard(props) {
   }
 
   const handleLikePost = () => {
-    const reqObj = {
-      method: 'POST',
-      headers: { 
-        'Content-Type' : 'application/json'
-      },
-      body: JSON.stringify({ post_id: id, user_id: rootUser.id })
-
-    }
-    fetch('http://localhost:3000/likes', reqObj)
+    dispatch(thunkAddLikeToPost(id, rootUser.id))
     setLiked(true)
     setLikeCount(likeCount + 1)
   }

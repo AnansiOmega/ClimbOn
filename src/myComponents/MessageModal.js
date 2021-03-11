@@ -15,7 +15,7 @@ import { FormGroup, Input, Form } from 'reactstrap'
 import modalStyle from "../assets/jss/material-kit-react/modalStyle";
 import { ActionCableConsumer } from 'react-actioncable-provider'
 import { useDispatch } from 'react-redux'
-import { thunkHandleStartConvo } from '../Actions/user'
+import { thunkHandleStartConvo, thunkDeleteNotification, thunkSendMessage } from '../Actions/user'
 import { ContactSupportOutlined } from '@material-ui/icons';
 
 
@@ -31,7 +31,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 
 export default function Modal(props) {
-    const user = props['user'] // annoying bug that happens when using these styled components
+    const user = props['user']
     const { id, fname } = user
     const [modal, setModal] = useState(false);
     const [body, setBody] = useState('')
@@ -43,40 +43,31 @@ export default function Modal(props) {
     const dispatch = useDispatch()
     const classes = useStyles();
 
-    const handleStartConvo = () => {
-      dispatch(thunkHandleStartConvo(id))
-      setModal(true)
+    const handleStartConvo = () => { // needs other users id to find the conversation that they are already having
+      dispatch(thunkHandleStartConvo(id))// needs to load the page because it needs to start up websocket
+      setModal(true)// it waits until loader is no longer false ( check redux )
     }
 
+    
+    const handleReceivedConversation = conversationData => { // when action cable gets the conversation this updates state
+      const { id, messages } = conversationData.conversation // to hold the id of conversation, and the previous messages the users exchanged
+      setMessages(messages)
+      setConversationId(id)
+      endOfMessages.current.scrollIntoView({ behavior: 'smooth' })
+    }
 
-    const sendMessage = e => {
-        const user_id = localStorage.getItem('userId')// thunk this next time. 
+    const sendMessage = e => { // sends message to the backend
         e.preventDefault()
-        const reqObj = {
-            method: 'POST',
-            headers: {
-                'Content-Type' : 'application/json'
-            },
-            body: JSON.stringify({conversation_id, user_id, body})
-        }
-        
-        fetch('http://localhost:3000/messages', reqObj)
+        dispatch(thunkSendMessage(conversation_id, body))
         setBody('')
         typingInput.current.focus()
       }
-      
-      const handleReceivedConversation = conversationData => {
-        const { id, messages } = conversationData.conversation
-        setMessages(messages)
-        setConversationId(id)
-        endOfMessages.current.scrollIntoView({ behavior: 'smooth' })
-      }
 
       
-      const handleNewMessages = newMessage => {
-        let newMessages = messages.filter(message => message.id !== newMessage.message.id)
+      const handleNewMessages = newMessage => {// because of a bug, that i can't figure out yet, active cable sends multiple responses back
+        let newMessages = messages.filter(message => message.id !== newMessage.message.id)// this filters duplicates
         newMessages.push(newMessage.message)
-        setMessages(newMessages)
+        setMessages(newMessages)// updates state to show new messages received
         endOfMessages.current.scrollIntoView({ behavior: 'smooth' })
     }
     
@@ -84,19 +75,9 @@ export default function Modal(props) {
       return messages.map(message => <p>{`${message.fname}:    ${message.body}`}</p>)
     }
 
-    const deleteNotification = () => {
-      const current_user_id = localStorage.getItem('userId')// thunk this next time. 
-      const reqObj = {
-        method: 'POST',
-        headers: {
-          'Content-Type' : 'application/json'
-        },
-        body: JSON.stringify({user_id: id, current_user_id})
-      }
-
-      fetch('http://localhost:3000/message-notification', reqObj)
+    const deleteNotification = () => { // send delete request for this message
+      dispatch(thunkDeleteNotification(id))
       setNotificationDeleted(true)
-
     }
 
 

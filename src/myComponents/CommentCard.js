@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react'
+import { thunkAddLikeComment } from '../Actions/post'
+import { useDispatch } from 'react-redux'
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
@@ -22,23 +24,17 @@ export const CommentCard = (props) => {
     const [liked, setLiked] = useState(false)
     const [likeCount, setLikeCount] = useState(likes.length)
     const rootUserId = parseInt(localStorage.getItem('userId'))
+    const dispatch = useDispatch()
     useEffect(() => {
         likes.forEach(like => {
-            if (like.user.id === rootUserId) {
-                setLiked(true)
+            if (like.user.id === rootUserId) { /// checks to see if the incoming likes have been liked by this user
+                setLiked(true) // hence rootUser
             }
         })
     })
 
-    const handleLikeComment = () => {
-        const reqObj = {
-            method: 'POST',
-            headers: { 
-            'Content-Type' : 'application/json'
-            },
-            body: JSON.stringify({ comment_id: id, user_id: rootUserId })
-        }
-        fetch('http://localhost:3000/likes', reqObj)
+    const handleLikeComment = () => { // send post request to backend to like that specific comment, 
+        dispatch(thunkAddLikeComment(id, rootUserId))// need comment id and user id to know which user liked which comment
         setLiked(true)
         setLikeCount(likeCount + 1)
     }

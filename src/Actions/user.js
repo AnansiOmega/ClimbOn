@@ -170,3 +170,36 @@ export const thunkHandleStartConvo = (user_id) => {
         .then(() => dispatch(handleConversationFetchSuccess()))
     }
 }
+
+
+export const thunkSendMessage = (conversation_id, body) => {
+    return (dispatch) => {
+        const user_id = localStorage.getItem('userId')
+        const reqObj = {
+            method: 'POST',
+            headers: {
+                'Content-Type' : 'application/json'
+            },
+            body: JSON.stringify({conversation_id, user_id, body})
+        }
+        
+        fetch('http://localhost:3000/messages', reqObj)
+    }
+}
+
+
+export const thunkDeleteNotification = (user_id) => {
+    return (dispatch) => {
+        const current_user_id = localStorage.getItem('userId')// thunk this next time. 
+        const reqObj = {
+          method: 'POST',
+          headers: {
+            'Content-Type' : 'application/json'
+          },
+          body: JSON.stringify({user_id, current_user_id})
+        }
+  
+        fetch('http://localhost:3000/message-notification', reqObj)
+    }
+}
+
