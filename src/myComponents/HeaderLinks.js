@@ -17,6 +17,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 // @material-ui/icons
 import { Apps } from "@material-ui/icons";
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
+import PersonIcon from '@material-ui/icons/Person';
 
 // core components
 import CustomDropdown from "components/CustomDropdown/CustomDropdown.js";
@@ -44,6 +45,26 @@ export default function HeaderLinks(props) {
   return (
     <List className={classes.list}>
       <ListItem className={classes.listItem}>
+      <CustomDropdown
+          noLiPadding
+          user={user}
+          buttonText="Profile"
+          buttonProps={{
+            className: classes.navLink,
+            color: "transparent"
+          }}
+          buttonIcon={ PersonIcon }
+          dropdownList={[
+            <Link className={classes.dropdownLink} to={profilePageUrl}>
+              Profile
+            </Link>,
+            <Link className={classes.dropdownLink} to='/profile/settings'>
+              Account Settings <i className="material-icons">manage_accounts</i>
+            </Link>
+          ]}
+        />
+      </ListItem>
+      <ListItem className={classes.listItem}>
         <Link
           to='/find'
           color="transparent"
@@ -52,12 +73,6 @@ export default function HeaderLinks(props) {
           Find Climbers
         </Link>
       </ListItem>
-      <ListItem className={classes.listItem}>
-        {/*<Tooltip title="Delete">
-          <IconButton aria-label="Delete">
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>*/}
            <ListItem className={classes.listItem}>
         <CustomDropdown
           noLiPadding
@@ -81,14 +96,6 @@ export default function HeaderLinks(props) {
           </Link>
           ]}
         />
-      </ListItem>
-          <Link
-            to={profilePageUrl}
-            color="transparent"
-            className={classes.navLink}
-          >
-            Profile
-          </Link>
       </ListItem>
       <ListItem className={classes.listItem}>
           <Button

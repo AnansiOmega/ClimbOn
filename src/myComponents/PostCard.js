@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { thunkFetchComments, thunkSubmitNewComment, thunkAddLikeToPost } from '../Actions/post'
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
@@ -20,6 +20,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import TextField from '@material-ui/core/TextField';
 import Button from "components/CustomButtons/Button.js";
 import { CommentCard } from './CommentCard'
+import { setSyntheticLeadingComments } from 'typescript';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -47,13 +48,13 @@ const useStyles = makeStyles((theme) => ({
 export default function PostCard(props) {
   const classes = useStyles();
   const { content, id, user, likes, time_posted } = props["post"]
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = useState(false);
   const [liked, setLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(likes.length)
+  const [comments, setComments] = useState([])
   const [newComment, setNewComment] = useState('')
   const dispatch = useDispatch()
   const rootUser = useSelector(state => state.user)
-  const comments = useSelector(state => state.comments)
   useEffect(() => {
     likes.forEach( like => {
       if(like.user.id === rootUser.id){
@@ -62,13 +63,29 @@ export default function PostCard(props) {
     })
   })
 
-  const handleShowComments = () => {
-    dispatch(thunkFetchComments(id))
+  const handleShowComments = () => { // can't thunk this out because I need this information specifically for this component
+    fetch(`http://localhost:3000/show-comments/${id}`) // can't hold all of the comments for every post in store 
+    .then(resp => resp.json())
+    .then(comments => {
+      setComments(comments)
+    })
     setExpanded(!expanded);
   };
 
-  const handleSubmitNewComment = () => {
-    dispatch(thunkSubmitNewComment(id, newComment, rootUser.id))
+  const handleSubmitNewComment = () => {// the same goes for this 
+    const reqObj = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ post_id: id, content: newComment, user_id: rootUser.id})
+    }
+
+    fetch('http://localhost:3000/comments', reqObj)
+    .then(resp => resp.json())
+    .then(newComment => {
+      setComments([...comments, newComment])
+    })
     setNewComment('')
   }
 

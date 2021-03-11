@@ -1,58 +1,52 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { thunkCreateNewUser } from '../Actions/user'
+import { thunkUpdateUser } from '../Actions/user'
 import { FormGroup, Label, Input, Col, Row, FormText } from 'reactstrap';
+import Button from "components/CustomButtons/Button.js";
+import CardBody from "components/Card/CardBody.js";
+import CustomInput from "components/CustomInput/CustomInput.js";
 import Popover from "@material-ui/core/Popover";
 
-
-// @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-// core components
-import GridContainer from "components/Grid/GridContainer.js";
-import GridItem from "components/Grid/GridItem.js";
-import Button from "components/CustomButtons/Button.js";
-import Card from "components/Card/Card.js";
-import CardBody from "components/Card/CardBody.js";
-import CardFooter from "components/Card/CardFooter.js";
-import CustomInput from "components/CustomInput/CustomInput.js";
-
-import styles from "assets/jss/material-kit-react/views/loginPage.js";
-
-import image from '../imgs/login-page-bckgrnd.jpg'
+import styles from "assets/jss/material-kit-react/views/landingPage.js";
+import classNames from "classnames";
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(styles);
 
-export default function LoginPage(props) {
-  const [cardAnimaton, setCardAnimation] = useState("cardHidden");
-  setTimeout(function() {
-    setCardAnimation("");
-  }, 700);
-  const history = useHistory()
-  const [anchorElTop, setAnchorElTop] = useState(null);
-  const dispatch = useDispatch()
-  const errors = useSelector(state => state.loginErrors)
-  useEffect(() => {
-    setLoginErrors(errors)
-  }, [errors])
-
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [fname, setFname] = useState('')
-  const [lname, setLname] = useState('')
-  const [age, setAge] = useState('')
-  const [gender, setGender] = useState('')
-  const [climbing_preference, setClimbing_preference] = useState('Top Rope')
-  const [commitment, setCommitment] = useState('1')
-  const [skill_level, setSkill_level] = useState('5.8')
-  const [bio, setBio] = useState('')
-  const [street, setStreet] = useState('')
-  const [city, setCity] = useState('')
-  const [state, setState] = useState('')
-  const [photo, setPhoto] = useState('')
-  const [backgroundImage, setBackgroundImage] = useState('')
-  const [loginErrors, setLoginErrors] = useState([])
-  
+export const SettingsPage = () => {
+useEffect(() => {
+    document.body.style.backgroundColor = 'purple' // changes background color, because the white is blinding
+    return () => {
+        document.body.style.backgroundColor = 'white'
+    }
+},[])
+const user = useSelector(state => state.user)
+const classes = useStyles();
+const [anchorElTop, setAnchorElTop] = useState(null);
+const [username, setUsername] = useState('')
+const [password, setPassword] = useState('')
+const [confirmPassword, setConfirmPassword] = useState('')
+const [climbing_preference, setClimbing_preference] = useState('Top Rope')
+const [commitment, setCommitment] = useState('1')
+const [skill_level, setSkill_level] = useState('5.8')
+const [bio, setBio] = useState('')
+const [street, setStreet] = useState('')
+const [city, setCity] = useState('')
+const [state, setState] = useState('')
+const [photo, setPhoto] = useState('')
+const [background_image, setBackgroundImage] = useState('')
+const [loginErrors, setLoginErrors] = useState([])
+useEffect(() => {
+    let usersClimbingPrefUppercase = user.climbing_preference?.split(' ').length > 1 ? user.climbing_preference.split(' ').forEach(word => word.charAt(0).toUpperCase() + word.substring(1)) : user.climbing_preference?.charAt(0).toUpperCase() + user.climbing_preference?.substring(1)
+    setClimbing_preference(usersClimbingPrefUppercase)
+    setCommitment(user.commitment)
+    setSkill_level(user.skill_level)
+    setBio(user.bio)
+}, [user])
+const dispatch = useDispatch()
+const history = useHistory()
 
   const handleInput = e => {
     switch(e.target.id){
@@ -62,20 +56,11 @@ export default function LoginPage(props) {
       case 'password':
           setPassword(e.target.value)
       break;
-      case 'fname':
-          setFname(e.target.value)
-      break;
-      case 'lname':
-          setLname(e.target.value)
-      break;
-      case 'age':
-          setAge(e.target.value)
-      break;
-      case 'gender':
-          setGender(e.target.value.toLowerCase())
+      case 'confirmPassword':
+           setConfirmPassword(e.target.value)
       break;
       case 'climbing_preference':
-          setClimbing_preference(e.target.value.toLowerCase())
+          setClimbing_preference(e.target.value)
       break;
       case 'commitment':
           setCommitment(e.target.value)
@@ -97,7 +82,6 @@ export default function LoginPage(props) {
       break;
       case 'photo':
           setPhoto(e.target.files[0])
-      break;
       case 'backgroundImage':
           setBackgroundImage(e.target.files[0])
       break;
@@ -106,16 +90,16 @@ export default function LoginPage(props) {
   }
   }
 
-  
+    
   const handleSubmit = e => {
     e.preventDefault()
+    if( password !== confirmPassword){
+        setLoginErrors('passwords do not match')
+        return
+    }
     let formState = {
       username,
       password,
-      fname,
-      lname,
-      age,
-      gender,
       climbing_preference,
       commitment,
       skill_level,
@@ -124,49 +108,36 @@ export default function LoginPage(props) {
       city,
       state,
       photo,
-      backgroundImage
+      background_image
     }
 
     const formData = new FormData()
 
     for (const property in formState) {
-        formData.append(
-            property, formState[property]
-        )
+        if(formState[property] !== ""){
+            formData.append(
+                property, formState[property]
+            )
+        }
     }
 
-    dispatch(thunkCreateNewUser(formData))
+    
+    dispatch(thunkUpdateUser(user.id, formData))
     history.push('/')
   }
 
 
-  const renderErrors = () => {
-    if(loginErrors){
-        return loginErrors.map(error => error.split(' ')[0])
-    } else {
-        return []
-    }
-}
 
-  const classes = useStyles();
-  return (
-    <div>
-      <div
-        className={classes.pageHeader}
-        style={{
-          backgroundImage: "url(" + image + ")",
-          backgroundSize: "cover",
-          backgroundPosition: "top center"
-        }}
-      >
-        <div className={classes.container}>
-          <GridContainer justify="center">
-            <GridItem xs={12} sm={12} md={7}>
-              <Card className={classes[cardAnimaton]}>
-                <form className={classes.form}>
+    return(
+        <div style={{ marginTop: '15%' }}>
+            <div className={classNames(classes.main, classes.mainRaised)}>
+                <div className={classes.container}>
+                    <div className={classes.section}>
+                        <h2 style={{ color: 'black' }} className={classes.title}>Make Some Changes</h2>
+                        <form className={classes.form}>
                   <CardBody>
                     <CustomInput
-                      labelText="Username"
+                      labelText="New Username"
                       id='username'
                       value={username}
                       setUsername={setUsername}
@@ -177,7 +148,7 @@ export default function LoginPage(props) {
                       inputProps={{ type: "text"}}
                     />
                     <CustomInput
-                      labelText="Password"
+                      labelText="New Password"
                       id='password'
                       handleInput={handleInput}
                       value={password}
@@ -186,58 +157,16 @@ export default function LoginPage(props) {
                       }}
                       inputProps={{ type: "password" }}
                     />
-                    <Row>
-                        <Col>
-                            <CustomInput
-                            labelText="First Name"
-                            id='fname'
-                            handleInput={handleInput}
-                            value={fname}
-                            formControlProps={{
-                                fullWidth: true
-                            }}
-                            inputProps={{ type: "text" }}
-                            />
-                        </Col>
-                        <Col>
-                            <CustomInput
-                            labelText="Last Name"
-                            id='lname'
-                            handleInput={handleInput}
-                            value={lname}
-                            formControlProps={{
-                                fullWidth: true
-                            }}
-                            inputProps={{ type: "text" }}
-                            />
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <CustomInput
-                            labelText="Age"
-                            id='age'
-                            handleInput={handleInput}
-                            value={age}
-                            formControlProps={{
-                                fullWidth: true
-                            }}
-                            inputProps={{ type: "number" }}
-                            />
-                        </Col>
-                        <Col>
-                            <CustomInput
-                            labelText="Gender"
-                            id='gender'
-                            handleInput={handleInput}
-                            value={gender}
-                            formControlProps={{
-                                fullWidth: true
-                            }}
-                            inputProps={{ type: "text" }}
-                            />
-                        </Col>
-                    </Row>
+                    <CustomInput
+                      labelText="Confirm Password"
+                      id='confirmPassword'
+                      handleInput={handleInput}
+                      value={password}
+                      formControlProps={{
+                        fullWidth: true
+                      }}
+                      inputProps={{ type: "password" }}
+                    />
                     <Row>
                         <Col>
                             <FormGroup>
@@ -350,17 +279,13 @@ export default function LoginPage(props) {
                     Select a jpg image to use as the background image that is seen on the home page, as well as your profile page.
                     </FormText>
                   </CardBody>
-                  <CardFooter className={classes.cardFooter}>
                     <Button onClick={handleSubmit} simple color="primary" size="lg">
-                      Signup
+                      Update
                     </Button>
-                  </CardFooter>
-                </form>
-              </Card>
-            </GridItem>
-          </GridContainer>
+                    </form>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    )
 }

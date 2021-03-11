@@ -101,31 +101,3 @@ export const thunkAddLikeComment = (comment_id, user_id) => {
         fetch('http://localhost:3000/likes', reqObj)
     }
 }
-
-export const thunkSubmitNewComment = (post_id, content, user_id) => {
-    return (dispatch) => {
-        const reqObj = {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ post_id, content, user_id})
-          }
-      
-          fetch('http://localhost:3000/comments', reqObj)
-          .then(resp => resp.json())
-          .then(newComment => {
-            dispatch(createNewCommentSuccess(newComment))
-          })
-    }
-}
-
-export const thunkFetchComments = (id) => {
-return (dispatch) => {
-        fetch(`http://localhost:3000/show-comments/${id}`)
-            .then(resp => resp.json())
-            .then(comments => {
-                dispatch(postCommentsFetchSuccess(comments))
-            })
-    }
-}

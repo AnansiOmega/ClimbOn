@@ -95,7 +95,7 @@ export default function CustomDropdown(props) {
           {buttonText !== undefined ? buttonText : null}
           {caret ? <b className={caretClasses} /> : null}
         </Button>
-        { user.notifications ? <span>{user.notifications.length}</span> : null }
+        {/* { user.notifications ? <span>{user.notifications.length}</span> : null } */}
       </div>
       <Popper
         open={Boolean(anchorEl)}

@@ -57,9 +57,10 @@ export default function ProfilePage(props) {
     );
 
     const user = useSelector(state => state.user)
-    const { username, fname, lname, photo, climbing_preference, skill_level, bio, friends } = user
+    const { username, fname, lname, photo, climbing_preference, skill_level, bio, friends, background_image } = user
     const navImageClasses = classNames(classes.imgRounded, classes.imgGallery);
     const imgUrl = `http://localhost:3000/${photo}`
+    const backgroundImageUrl = `http://localhost:3000/${background_image}`
 
     const renderConversations = () => {
       if(!friends) return
@@ -71,7 +72,7 @@ export default function ProfilePage(props) {
     
   return (
     <div>
-      <Parallax small filter image={require("assets/img/profile-bg.jpg")} />
+      <Parallax small filter image={background_image ? backgroundImageUrl : require("imgs/rock-climbing-pic.jpg")} />
       <div className={classNames(classes.main, classes.mainRaised)}>
         <div>
           <div className={classes.container}>

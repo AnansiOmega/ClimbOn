@@ -44,7 +44,7 @@ export const CommentCard = (props) => {
 
     return (
         <div className='comment-card'>
-            <div style={{ gridColumnStart: '2', justifySelf: 'start' }}><span>{user.fname}</span><span style={{float: 'right'}}>{time_posted}</span></div>
+            <div style={{ gridColumnStart: '2', justifySelf: 'start', display:'flex', flexDirection: 'column' }}><span>{user.fname}</span><span>{time_posted}</span></div>
             <Avatar className={classes.avatar} src={commentImgUrl} />
             <IconButton onClick={handleLikeComment} aria-label="like comment" style={{ gridColumnStart: '1', gridRowStart: '2' }} disabled={liked}>
                 <FavoriteIcon style={liked ? { color: 'red' } : null} />

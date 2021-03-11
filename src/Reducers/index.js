@@ -5,7 +5,6 @@ import loader from './loader'
 import loginErrors from './errors'
 import otherUsers from './otherUsers'
 import posts from './posts'
-import comments from './comments'
 
 export default combineReducers({
     auth,
@@ -13,6 +12,5 @@ export default combineReducers({
     loader,
     otherUsers,
     loginErrors,
-    posts,
-    comments
+    posts
 })

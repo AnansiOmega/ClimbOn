@@ -14,7 +14,11 @@ const productStyle = {
   },
   description: {
     color: "#999"
-  }
+  },
+  formControl: {
+    margin: '2%',
+    width: '40vw',
+  },
 };
 
 export default productStyle;

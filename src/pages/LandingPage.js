@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from 'react-router-dom'
-import { useSelector, useDispatch, shallowEqual } from 'react-redux'
+import { useSelector, shallowEqual } from 'react-redux'
 import { thunkFetchUser } from '../Actions/user'
+import { useDispatch } from 'react-redux'
+
 
 // nodejs library that concatenates classes
 import classNames from "classnames";
@@ -17,22 +19,23 @@ import FeedSection from "./FeedSection";
 import CreatePostSection from '../myComponents/CreatePostSection'
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { setGlobalCssModule } from "reactstrap/es/utils";
 
 const useStyles = makeStyles(styles);
 
 export default function LandingPage(props) {
-  const auth = useSelector(state => state.auth, shallowEqual)
   const user = useSelector(state => state.user, shallowEqual)
+  const dispatch = useDispatch()
   const [picAnimation, setPicAnimation] = useState('hidden-profile-pic')
   useEffect(() => {
-    setTimeout(() => setPicAnimation('profile-pic'), 1000)
+    setTimeout(() => setPicAnimation('profile-pic'), 500)
   }, [])
-  const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(thunkFetchUser(auth.id))
-  },[auth])
+    const userId = localStorage.getItem('userId')
+    dispatch(thunkFetchUser(userId))
+  },[])
+
+
 
   const loader = useSelector(state => state.loader, shallowEqual)
 
@@ -43,7 +46,7 @@ export default function LandingPage(props) {
     classes.imgFluid
   );
   
-  const { id, fname, lname, climbing_preference, commitment, photo, friends } = user
+  const { id, fname, lname, climbing_preference, commitment, photo, friends, background_image } = user
 
   const renderFriends = () => {
     if(!friends) return 
@@ -53,19 +56,20 @@ export default function LandingPage(props) {
     }) 
   }
 
-  const imgUrl = `http://localhost:3000/${photo}`
+  const profileImageUrl = `http://localhost:3000/${photo}`
+  const backgroundImageUrl = `http://localhost:3000${background_image}`
   const profileUrl = `/profile/${id}`
   return (
     <div>
       <Backdrop className={classes.backdrop} open={loader}>
         <CircularProgress color="inherit" />
       </Backdrop>
-      <Parallax filter image={require("imgs/rock-climbing-pic.jpg")}>
+      <Parallax filter image={background_image ? backgroundImageUrl : require("imgs/rock-climbing-pic.jpg")}>
         <section className='user-page-people'>
           {renderFriends()}
           <div className={picAnimation}>
             <Link to={profileUrl} className='home-page-link'>
-              <img src={imgUrl} alt="profile picture" className={imageClasses} id='landing-page-pic'/>
+              <img src={profileImageUrl} alt="profile picture" className={imageClasses} id='landing-page-pic'/>
               </Link>
               <h4>
                 {`${fname} ${lname}`}

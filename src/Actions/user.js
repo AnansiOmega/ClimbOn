@@ -21,6 +21,13 @@ export const loginErrors = payload => {
     }
 }
 
+export const updateUserSuccess = payload => {
+    return { 
+        type: 'UPDATE_USER_SUCCESS',
+        payload
+    }
+}
+
 export const fetchUserMatchesSuccess = payload => {
     return { 
         type: 'FETCH_USER_MATCHES_SUCCESS',
@@ -76,13 +83,26 @@ export const thunkCreateNewUser = formData => {
     }
 }
 
+export const thunkUpdateUser = (id, formData) => {
+    return (dispatch) => {
+      axios.patch(`http://localhost:3000/users/${id}`, formData)
+      .then( user => {
+          if(user.data.errors){
+              dispatch(loginErrors(user.data.errors))
+              return
+          }
+          dispatch(updateUserSuccess(user.data))
+      })
+    }
+}
+
 export const thunkFetchUser = id => {
     return (dispatch) => {
         fetch(`http://localhost:3000/users/${id}`)
             .then(resp => resp.json())
             .then(user => {
                 dispatch(fetchUserSuccess(user))
-    })
+            })
     }
 }
 
