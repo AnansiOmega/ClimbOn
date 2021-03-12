@@ -25,7 +25,7 @@ import { setSyntheticLeadingComments } from 'typescript';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '75vw',
+    width: 'inherit',
     alignSelf: 'center'
   },
   media: {
@@ -50,18 +50,18 @@ export default function PostCard(props) {
   const { content, id, user, likes, time_posted } = props["post"]
   const [expanded, setExpanded] = useState(false);
   const [liked, setLiked] = useState(false)
-  const [likeCount, setLikeCount] = useState(likes.length)
+  const [likeCount, setLikeCount] = useState(0)
   const [comments, setComments] = useState([])
   const [newComment, setNewComment] = useState('')
   const dispatch = useDispatch()
-  const rootUser = useSelector(state => state.user)
+  const rootUser = useSelector(state => state.user, shallowEqual)
   useEffect(() => {
+    setLikeCount(likes.length)// due to the sorting that happens, the buttons don't remember whether they've been clicked or not
+    setLiked(false)// therefore, I need to reset all of them to false even thought the state originally starts them at false
     likes.forEach( like => {
-      if(like.user.id === rootUser.id){
-        setLiked(true)
-      }
-    })
-  })
+      if(like.user.id === rootUser.id) setLiked(true)
+    })    // doesn't seem like components get
+  },[likes])   // re-rendered, when they are sorted in higher up component.
 
   const handleShowComments = () => { // can't thunk this out because I need this information specifically for this component
     fetch(`http://localhost:3000/show-comments/${id}`) // can't hold all of the comments for every post in store 

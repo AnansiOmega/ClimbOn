@@ -55,16 +55,26 @@ export const thunkCreatePost = (content) => {
     }
 }
 
+export const thunkFetchUsersAndFriendsPosts = id => {
+    return (dispatch) => {
+        fetch(`http://localhost:3000/user-and-friends-posts/${id}`)
+        .then( resp => resp.json())
+        .then( posts => {
+          dispatch(fetchUserPostsSuccess(posts))
+        })
+    }
+}
 
-
-
-
-
-
-
-
-
-
+export const thunkFetchUsersPosts = id => {
+    return (dispatch) => {
+        fetch(`http://localhost:3000/users-posts/${id}`)
+        .then( resp => resp.json())
+        .then( posts => {
+            debugger
+          dispatch(fetchUserPostsSuccess(posts))
+        })
+    }
+}
 
 
 
@@ -101,3 +111,5 @@ export const thunkAddLikeComment = (comment_id, user_id) => {
         fetch('http://localhost:3000/likes', reqObj)
     }
 }
+
+

@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux'
-import { thunkFetchAuthCurrentUser } from '../Actions/auth'
 import { thunkFetchUser } from '../Actions/user'
+import { thunkFetchUsersPosts } from '../Actions/post'
 import { useHistory, useParams } from 'react-router-dom'
+import PostCard from '../myComponents/PostCard'
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // @material-ui/core components
@@ -36,16 +37,17 @@ import work4 from "assets/img/examples/mariya-georgieva.jpg";
 import work5 from "assets/img/examples/clem-onojegaw.jpg";
 
 import styles from "assets/jss/material-kit-react/views/profilePage.js";
+import authReducer from "Reducers/auth";
 
 const useStyles = makeStyles(styles);
 
 export default function ProfilePage(props) {
   const dispatch = useDispatch()
-  const history = useHistory()
   const params = useParams()
 
   useEffect(() => {
     dispatch(thunkFetchUser(params["id"]))
+    dispatch(thunkFetchUsersPosts(params["id"]))
   },[params["id"]])
   
   const classes = useStyles();
@@ -57,6 +59,7 @@ export default function ProfilePage(props) {
     );
 
     const user = useSelector(state => state.user)
+    const posts = useSelector(state => state.posts)
     const { username, fname, lname, photo, climbing_preference, skill_level, bio, friends, background_image } = user
     const navImageClasses = classNames(classes.imgRounded, classes.imgGallery);
     const imgUrl = `http://localhost:3000/${photo}`
@@ -67,6 +70,10 @@ export default function ProfilePage(props) {
       return friends.map( user => {
         return <FriendMessageCard user={user}/>
       })
+    }
+
+    const renderUsersPosts = () => {
+      return posts.map(post => <PostCard post={post}/>)
     }
   
     
@@ -114,32 +121,9 @@ export default function ProfilePage(props) {
                       tabButton: "Posts",
                       tabIcon: Camera,
                       tabContent: (
-                        <GridContainer justify="center">
-                          <GridItem xs={12} sm={12} md={4}>
-                            <img
-                              alt="..."
-                              src={studio1}
-                              className={navImageClasses}
-                            />
-                            <img
-                              alt="..."
-                              src={studio2}
-                              className={navImageClasses}
-                            />
-                          </GridItem>
-                          <GridItem xs={12} sm={12} md={4}>
-                            <img
-                              alt="..."
-                              src={studio5}
-                              className={navImageClasses}
-                            />
-                            <img
-                              alt="..."
-                              src={studio4}
-                              className={navImageClasses}
-                            />
-                          </GridItem>
-                        </GridContainer>
+                        <div>
+                          {renderUsersPosts()}
+                        </div>
                       )
                     },
                     {
