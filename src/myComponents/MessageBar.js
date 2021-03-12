@@ -46,6 +46,7 @@ const useStyles = makeStyles({
 export const MessageBar = () => {
     const [unreadMessages, setUnreadMessages] = useState([])
     const classes = useStyles();
+    const [drawerOpen, setDrawerOpen] = useState(false)
     const [state, setState] = React.useState({
       top: false,
       left: false,
@@ -62,13 +63,6 @@ export const MessageBar = () => {
         setUnreadMessages(Array.from(new Set(messages)))// doesn't matter how many messages from the same person, just have a bubble
     },[user])
 
-    const toggleDrawer = (anchor, open) => (event) => {
-      if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-        return;
-      }
-  
-      setState({ ...state, [anchor]: open });
-    };
 
     
       const list = (anchor) => (
@@ -77,25 +71,12 @@ export const MessageBar = () => {
             [classes.fullList]: anchor === 'top' || anchor === 'bottom',
           })}
           role="presentation"
-          onClick={toggleDrawer(anchor, false)}
-          onKeyDown={toggleDrawer(anchor, false)}
+          onClick={() => setDrawerOpen(true)}
         >
           <List>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
+              <ListItem button>
+                <ListItemText primary='yeet that wheat bitch' />
               </ListItem>
-            ))}
-          </List>
-          <Divider />
-          <List>
-            {['All mail', 'Trash', 'Spam'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
           </List>
         </div>
       );
@@ -109,21 +90,18 @@ export const MessageBar = () => {
     return(
       <BottomNavigation showLabels className={classes.root}>
          <div>
-      {['left', 'right', 'top', 'bottom'].map((anchor) => (
-        <React.Fragment key={anchor}>
-          <Button onClick={toggleDrawer(anchor, true)}>{anchor}</Button>
+        <React.Fragment key='left'>
+          <Button onClick={() => setDrawerOpen(true)}>Send a Message</Button>
           <SwipeableDrawer
-            anchor={anchor}
-            open={state[anchor]}
-            onClose={toggleDrawer(anchor, false)}
-            onOpen={toggleDrawer(anchor, true)}
+            anchor='left'
+            open={drawerOpen}
+            onClose={() => setDrawerOpen(false)}
+            onOpen={() => setDrawerOpen(true)}
           >
-            {list(anchor)}
+            {list('left')}
           </SwipeableDrawer>
         </React.Fragment>
-      ))}
     </div>
-        <div style={{marginRight: '1rem'}}>New messages from:</div>
         {renderUnreadMessages()}
       </BottomNavigation>
     )
