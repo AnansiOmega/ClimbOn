@@ -60,9 +60,19 @@ export const handleConversationFetch = () => {
     }
 }
 
-export const handleConversationFetchSuccess = () => {
+// id(pin):83
+// notice_id(pin):175
+// notice_type(pin):"newMessage"
+// user_id(pin):196
+// created_at(pin
+
+export const handleConversationFetchSuccess = (id) => {
     return { 
-        type: 'HANDLE_CONVERSATION_FETCH_SUCCESS'
+        type: 'HANDLE_CONVERSATION_FETCH_SUCCESS',
+        payload: {
+            notice_id: id,
+            notice_type: 'newMessage'
+        }
     }
 }
 
@@ -187,7 +197,7 @@ export const thunkHandleStartConvo = (user_id) => {
         }
 
         fetch('http://localhost:3000/conversations', reqObj)
-        .then(() => dispatch(handleConversationFetchSuccess()))
+        .then(() => dispatch(handleConversationFetchSuccess(user_id)))
     }
 }
 

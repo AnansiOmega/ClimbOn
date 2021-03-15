@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { shallowEqual, useSelector } from 'react-redux'
 import { makeStyles } from "@material-ui/core/styles";
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import MessageModal from './MessageModal'
@@ -47,21 +47,21 @@ export const MessageBar = () => {
     const [unreadMessages, setUnreadMessages] = useState([])
     const classes = useStyles();
     const [drawerOpen, setDrawerOpen] = useState(false)
-    const [state, setState] = React.useState({
-      top: false,
-      left: false,
-      bottom: false,
-      right: false,
-    });
-    const user = useSelector(state => state.user)
+    const user = useSelector(state => state.user, shallowEqual)
+    const { notifications, friends } = user
     useEffect(() => {
       if(!user.id) return  /// filters out messages to only show the new messages, to update whether there should be new message button
-        let notifications = user.notifications?.filter( notification => notification.notice_type === 'newMessage')
-        let messages = notifications.map( notification => {
-          return user.friends.find(friend => friend.id === notification.notice_id)
+      let newNotifications = notifications?.filter( notification => notification.notice_type === 'newMessage')
+        let messages = newNotifications.map( notification => {
+          return friends.find(friend => friend.id === notification.notice_id)
         })
         setUnreadMessages(Array.from(new Set(messages)))// doesn't matter how many messages from the same person, just have a bubble
-    },[user])
+    },[user, notifications?.length])
+
+
+    const renderContacts = () => {
+      return friends?.map(friend => <MessageModal user={friend} />)
+    }
 
 
     
@@ -73,11 +73,9 @@ export const MessageBar = () => {
           role="presentation"
           onClick={() => setDrawerOpen(true)}
         >
-          <List>
-              <ListItem button>
-                <ListItemText primary='yeet that wheat bitch' />
-              </ListItem>
-          </List>
+          <div className='message-contacts-container'>
+            {renderContacts()}
+          </div>
         </div>
       );
     

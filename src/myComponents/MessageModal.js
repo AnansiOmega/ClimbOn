@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 // material-ui components
 import { makeStyles } from "@material-ui/core/styles";
 import Slide from "@material-ui/core/Slide";
@@ -16,6 +16,7 @@ import modalStyle from "../assets/jss/material-kit-react/modalStyle";
 import { ActionCableConsumer } from 'react-actioncable-provider'
 import { useDispatch } from 'react-redux'
 import { thunkHandleStartConvo, thunkDeleteNotification, thunkSendMessage } from '../Actions/user'
+import Avatar from '@material-ui/core/Avatar';
 import { ContactSupportOutlined } from '@material-ui/icons';
 
 
@@ -31,8 +32,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 
 export default function Modal(props) {
-    const user = props['user']
-    const { id, fname } = user
+    const { id, fname, lname, photo } = props['user']
     const [modal, setModal] = useState(false);
     const [body, setBody] = useState('')
     const [messages, setMessages] = useState([])
@@ -81,13 +81,14 @@ export default function Modal(props) {
     }
 
 
-
+    const imgUrl = `http://localhost:3000/${photo}`
   return (
     <div>
       { notificationDeleted ? null :
-      <Button style={props.type === 'MessageBar' ? { borderRadius: '30px 0 0 30px', width: '5rem' } : null} color={ props.type === 'MessageBar' ? 'primary' : 'rose' } onClick={handleStartConvo}>
-        {props.type === 'MessageBar' ? fname : 'Message!'}
-      </Button>
+      props.type === 'MessageBar' ? 
+      <Button style={{ borderRadius: '30px 0 0 30px', width: '5rem' }} color='primary' onClick={handleStartConvo}>{fname}</Button>
+      :
+      <div className='message-card' onClick={handleStartConvo}><Avatar className={classes.avatar} src={imgUrl}/><h5>{`${fname} ${lname}`}</h5></div>
       }
       { props.type === 'MessageBar' && !notificationDeleted ?
       <Button onClick={deleteNotification} style={{ borderRadius: '0 30px 30px 0', padding: '12px', width: '1rem' }} color='rose'>
