@@ -5,10 +5,7 @@ import { shallowEqual, useSelector } from 'react-redux'
 import { thunkFetchUsersAndFriendsPosts } from '../Actions/post'
 import PostCard from '../myComponents/PostCard'
 import { useDispatch } from 'react-redux'
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import { InputLabel, MenuItem, FormControl, Select } from '@material-ui/core';
 
 import styles from "assets/jss/material-kit-react/views/landingPageSections/productStyle.js";
 

@@ -1,18 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { shallowEqual, useSelector } from 'react-redux'
-import { makeStyles } from "@material-ui/core/styles";
-import BottomNavigation from '@material-ui/core/BottomNavigation';
+import { BottomNavigation, SwipeableDrawer, Button, makeStyles } from '@material-ui/core';
 import MessageModal from './MessageModal'
 import clsx from 'clsx';
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import Button from '@material-ui/core/Button';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 
 const useStyles = makeStyles({
     root: {
@@ -29,9 +19,8 @@ const useStyles = makeStyles({
         alignItems: "center",
         flexFlow: "row nowrap",
         justifyContent: "flex-start",
-        position: "relative",
         zIndex: "1100",
-        position: 'sticky',
+        position: 'fixed',
         bottom: '0'
     },
     list: {
@@ -60,28 +49,28 @@ export const MessageBar = () => {
 
 
     const renderContacts = () => {
-      return friends?.map(friend => <MessageModal user={friend} />)
+      return friends?.map(friend => <MessageModal user={friend} />) // renders users friends to side drawer
     }
 
 
-    
-      const list = (anchor) => (
-        <div
-          className={clsx(classes.list, {
-            [classes.fullList]: anchor === 'top' || anchor === 'bottom',
-          })}
-          role="presentation"
-          onClick={() => setDrawerOpen(true)}
-        >
-          <div className='message-contacts-container'>
-            {renderContacts()}
-          </div>
+  
+    const list = (anchor) => (
+      <div
+        className={clsx(classes.list, {
+          [classes.fullList]: anchor === 'top' || anchor === 'bottom',
+        })}
+        role="presentation"
+        onClick={() => setDrawerOpen(true)}
+      >
+        <div className='message-contacts-container'>
+          {renderContacts()}
         </div>
-      );
-    
+      </div>
+    );
+  
 
 
-    const renderUnreadMessages = () => {
+    const renderUnreadMessages = () => { // uses notifications of 'unread messages' if there are any, it will render to bottom nav
       return unreadMessages.map( user => <MessageModal user={user} type='MessageBar'/>)
     }
 

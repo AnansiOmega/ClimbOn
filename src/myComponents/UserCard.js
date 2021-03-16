@@ -8,11 +8,8 @@ import CardBody from "components/Card/CardBody.js";
 import Button from "components/CustomButtons/Button.js";
 import { useDispatch } from 'react-redux'
 import { thunkSendFriendReq } from '../Actions/user'
-
 import imagesStyles from "assets/jss/material-kit-react/imagesStyles.js";
-
 import { cardTitle } from "assets/jss/material-kit-react.js";
-
 const styles = {
   ...imagesStyles,
   cardTitle,
@@ -23,6 +20,7 @@ export default function Cards(props) {
   const [friendReqSent, setFriendReqSent] = useState(false)
   const { climbing_preference, username, fname, lname, photo, skill_level, id } = props['user']// for some reason props are sent as '{user: {blah: blah}}' I have to destructure this way
   const dispatch = useDispatch()
+  
   const handleFriendReq = () => {
     dispatch(thunkSendFriendReq(id))
     setFriendReqSent(true)

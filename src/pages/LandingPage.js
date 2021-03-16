@@ -17,8 +17,7 @@ import styles from "assets/jss/material-kit-react/views/landingPage.js";
 // Sections for this page
 import FeedSection from "./FeedSection";
 import CreatePostSection from '../myComponents/CreatePostSection'
-import Backdrop from '@material-ui/core/Backdrop';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { Backdrop, CircularProgress } from '@material-ui/core';
 
 const useStyles = makeStyles(styles);
 

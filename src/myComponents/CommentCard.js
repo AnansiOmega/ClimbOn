@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { thunkAddLikeComment } from '../Actions/post'
 import { useDispatch } from 'react-redux'
-import Typography from '@material-ui/core/Typography';
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
+import { Typography, Avatar, IconButton } from '@material-ui/core';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { makeStyles } from '@material-ui/core/styles';
 

@@ -1,12 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 // material-ui components
 import { makeStyles } from "@material-ui/core/styles";
-import Slide from "@material-ui/core/Slide";
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions";
-import IconButton from "@material-ui/core/IconButton";
+import { Slide, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Avatar } from "@material-ui/core";
 // @material-ui/icons
 import Close from "@material-ui/icons/Close";
 // core components
@@ -16,7 +11,6 @@ import modalStyle from "../assets/jss/material-kit-react/modalStyle";
 import { ActionCableConsumer } from 'react-actioncable-provider'
 import { useDispatch } from 'react-redux'
 import { thunkHandleStartConvo, thunkDeleteNotification, thunkSendMessage } from '../Actions/user'
-import Avatar from '@material-ui/core/Avatar';
 import { ContactSupportOutlined } from '@material-ui/icons';
 
 
