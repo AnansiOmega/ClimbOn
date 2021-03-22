@@ -48,6 +48,12 @@ export const clearOtherUsers = () => {
     }
 }
 
+export const clearLoginErrors = () => {
+    return {
+        type: 'CLEAR_LOGIN_ERRORS'
+    }
+}
+
 export const fetchUserMatchesStart = () => {
     return { 
         type: 'FETCH_USER_MATCHES_START',
@@ -59,12 +65,6 @@ export const handleConversationFetch = () => {
         type: 'HANDLE_CONVERSATION_FETCH'
     }
 }
-
-// id(pin):83
-// notice_id(pin):175
-// notice_type(pin):"newMessage"
-// user_id(pin):196
-// created_at(pin
 
 export const handleConversationFetchSuccess = (id) => {
     return { 
@@ -87,6 +87,7 @@ export const thunkCreateNewUser = formData => {
               dispatch(loginErrors(user.data.errors))
               return
           }
+        dispatch(clearLoginErrors())
         dispatch(fetchUserSuccess(user.data))
         dispatch(thunkFetchAuthorization(user.data.username, user.data.password))
       })
@@ -101,6 +102,7 @@ export const thunkUpdateUser = (id, formData) => {
               dispatch(loginErrors(user.data.errors))
               return
           }
+          dispatch(clearLoginErrors())
           dispatch(updateUserSuccess(user.data))
       })
     }

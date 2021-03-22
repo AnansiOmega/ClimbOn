@@ -56,8 +56,13 @@ export const FindClimbers = () => {
     }
 
     const renderMatches = () => {
+        const id = parseInt(localStorage.getItem('userId'))
         if(loader) return
-        return matches.map(user => <UserCard id={user.id} user={user}></UserCard>)
+        return matches.map(user => {
+            if(user.id !== id){
+                return <UserCard id={user.id} user={user}></UserCard>}
+            }
+        )
     }
 
     return(

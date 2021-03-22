@@ -50,7 +50,7 @@ export default function LoginPage(props) {
   const [city, setCity] = useState('')
   const [state, setState] = useState('')
   const [photo, setPhoto] = useState('')
-  const [backgroundImage, setBackgroundImage] = useState('')
+  const [background_image, setBackgroundImage] = useState('')
   const [loginErrors, setLoginErrors] = useState([])
   
 
@@ -75,7 +75,7 @@ export default function LoginPage(props) {
           setGender(e.target.value.toLowerCase())
       break;
       case 'climbing_preference':
-          setClimbing_preference(e.target.value.toLowerCase())
+          setClimbing_preference(e.target.value)
       break;
       case 'commitment':
           setCommitment(e.target.value)
@@ -109,6 +109,7 @@ export default function LoginPage(props) {
   
   const handleSubmit = e => {
     e.preventDefault()
+    // creates an object of the current state so that it can be packaged in Formdata
     let formState = {
       username,
       password,
@@ -124,11 +125,12 @@ export default function LoginPage(props) {
       city,
       state,
       photo,
-      backgroundImage
+      background_image
     }
 
     const formData = new FormData()
 
+    /// packages up state with key value pairs, and send it to backend
     for (const property in formState) {
         formData.append(
             property, formState[property]
@@ -136,7 +138,7 @@ export default function LoginPage(props) {
     }
 
     dispatch(thunkCreateNewUser(formData))
-    history.push('/')
+    // history.push('/')
   }
 
 
@@ -166,7 +168,8 @@ export default function LoginPage(props) {
                 <form className={classes.form}>
                   <CardBody>
                     <CustomInput
-                      labelText="Username"
+                      labelText={renderErrors().includes('Username') ? "Username must be valid" : 'New Username'}
+                      error={renderErrors().includes('Username')}
                       id='username'
                       value={username}
                       setUsername={setUsername}
@@ -177,7 +180,8 @@ export default function LoginPage(props) {
                       inputProps={{ type: "text"}}
                     />
                     <CustomInput
-                      labelText="Password"
+                      labelText={renderErrors().includes('Password') ? "Password must be valid" : 'Password'}
+                      error={renderErrors().includes('Password')}
                       id='password'
                       handleInput={handleInput}
                       value={password}
@@ -189,7 +193,8 @@ export default function LoginPage(props) {
                     <Row>
                         <Col>
                             <CustomInput
-                            labelText="First Name"
+                            labelText={renderErrors().includes('Fname') ? "First Name can't be blank" : 'First Name'}
+                            error={renderErrors().includes('Fname')}
                             id='fname'
                             handleInput={handleInput}
                             value={fname}
@@ -201,7 +206,8 @@ export default function LoginPage(props) {
                         </Col>
                         <Col>
                             <CustomInput
-                            labelText="Last Name"
+                            labelText={renderErrors().includes('Lname') ? "Last Name can't be blank" : 'Last Name'}
+                            error={renderErrors().includes('Lname')}
                             id='lname'
                             handleInput={handleInput}
                             value={lname}
@@ -215,7 +221,8 @@ export default function LoginPage(props) {
                     <Row>
                         <Col>
                             <CustomInput
-                            labelText="Age"
+                            labelText={renderErrors().includes('Age') ? "Age can't be blank" : 'Age'}
+                            error={renderErrors().includes('Age')}
                             id='age'
                             handleInput={handleInput}
                             value={age}
@@ -227,7 +234,8 @@ export default function LoginPage(props) {
                         </Col>
                         <Col>
                             <CustomInput
-                            labelText="Gender"
+                            labelText={renderErrors().includes('Gender') ? "Gender can't be blank" : 'Gender'}
+                            error={renderErrors().includes('Gender')}
                             id='gender'
                             handleInput={handleInput}
                             value={gender}
@@ -300,7 +308,8 @@ export default function LoginPage(props) {
                     <Row>
                         <Col>
                     <CustomInput
-                      labelText="Address"
+                      labelText={renderErrors().includes('Street') ? "Street can't be blank" : 'Street'}
+                      error={renderErrors().includes('Street')}
                       id='street'
                       handleInput={handleInput}
                       value={street}
@@ -312,7 +321,8 @@ export default function LoginPage(props) {
                     </Col>
                     <Col>
                     <CustomInput
-                    labelText="City"
+                    labelText={renderErrors().includes('City') ? "City can't be blank" : 'City'}
+                    error={renderErrors().includes('City')}
                     id='city'
                     handleInput={handleInput}
                     value={city}
@@ -324,7 +334,8 @@ export default function LoginPage(props) {
                   </Col>
                   <Col>
                   <CustomInput
-                  labelText="State"
+                  labelText={renderErrors().includes('State') ? "State can't be blank" : 'State'}
+                  error={renderErrors().includes('State')}
                   id='state'
                   handleInput={handleInput}
                   value={state}
@@ -340,7 +351,7 @@ export default function LoginPage(props) {
                         <Input type="textarea" id="bio" value={bio} onChange={handleInput} />
                     </FormGroup>
                     <Label>Profile Image</Label>
-                    <Input type="file" name="file" accept='image/jpeg, image/jpg' onChange={handleInput} id='photo'/>
+                    <Input type="file" name="file" accept='image/jpeg, image/jpg, image/webp' onChange={handleInput} id='photo'/>
                     <FormText color="muted">
                     Select a jpg image to use as your profile photo.
                     </FormText>

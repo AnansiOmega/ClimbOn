@@ -75,20 +75,20 @@ export const MessageBar = () => {
     }
 
     return(
-      <BottomNavigation showLabels className={classes.root}>
-         <div>
-        <React.Fragment key='left'>
-          <Button onClick={() => setDrawerOpen(true)}>Send a Message</Button>
-          <SwipeableDrawer
-            anchor='left'
-            open={drawerOpen}
-            onClose={() => setDrawerOpen(false)}
-            onOpen={() => setDrawerOpen(true)}
-          >
-            {list('left')}
-          </SwipeableDrawer>
-        </React.Fragment>
-    </div>
+      <BottomNavigation className={classes.root}>
+        <div>
+          <React.Fragment key='left'>
+            <Button onClick={() => setDrawerOpen(true)}>Send a Message</Button>
+            <SwipeableDrawer
+              anchor='left'
+              open={drawerOpen}
+              onClose={() => setDrawerOpen(false)}
+              onOpen={() => setDrawerOpen(true)}
+            >
+              {list('left')}
+            </SwipeableDrawer>
+          </React.Fragment>
+        </div>
         {renderUnreadMessages()}
       </BottomNavigation>
     )

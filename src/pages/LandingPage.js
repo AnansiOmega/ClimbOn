@@ -85,7 +85,7 @@ export default function LandingPage(props) {
           <FeedSection />
         </div>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

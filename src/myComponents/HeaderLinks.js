@@ -28,7 +28,6 @@ import styles from "assets/jss/material-kit-react/components/headerLinksStyle.js
 const useStyles = makeStyles(styles);
 
 export default function HeaderLinks(props) {
-  console.log(props)
   const dispatch = useDispatch();
   const history = useHistory()
   const user = useSelector(state => state.user)
@@ -37,6 +36,7 @@ export default function HeaderLinks(props) {
   const handleLogout = () => {
     dispatch(logoutUser)
     localStorage.removeItem('myToken')
+    localStorage.removeItem('userId')
     history.push('/login')
   }
   
@@ -84,9 +84,6 @@ export default function HeaderLinks(props) {
           }}
           buttonIcon={ NotificationsActiveIcon }
           dropdownList={[
-            <Link className={classes.dropdownLink}>
-              OtherStuff
-            </Link>,
             <Link
             to='/friend-requests'
             color="transparent"

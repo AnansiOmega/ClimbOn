@@ -70,7 +70,6 @@ export const thunkFetchUsersPosts = id => {
         fetch(`http://localhost:3000/users-posts/${id}`)
         .then( resp => resp.json())
         .then( posts => {
-            debugger
           dispatch(fetchUserPostsSuccess(posts))
         })
     }

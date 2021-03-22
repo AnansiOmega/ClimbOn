@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { Switch, Route, useHistory } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Switch, Route, useLocation, useHistory } from 'react-router-dom'
 import { thunkFetchAuthCurrentUser } from './Actions/auth'
 import { thunkFetchUser } from './Actions/user'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
@@ -15,7 +15,9 @@ import HeaderLinks from './myComponents/HeaderLinks'
 import { MessageBar } from './myComponents/MessageBar'
 
 export const App = () => {
+    const [hideBars, setHideBars] = useState(false)
     const dispatch = useDispatch()
+    const location = useLocation()
     const history = useHistory()
     const auth = useSelector(state => state.auth, shallowEqual)
 
@@ -25,14 +27,26 @@ export const App = () => {
     },[])
 
     useEffect(() => {
+        if(!auth.id) return
         dispatch(thunkFetchUser(auth.id))
     },[auth])
+
+    useEffect(() => {
+        if (location.pathname === '/login' || location.pathname === '/signup') {
+            setHideBars(true)
+        } else {
+            setHideBars(false)
+        }
+    }, [location.pathname])
     
 
     const dashboardRoutes = [];
     return(
         <div className='root'>
-            <Header
+            { hideBars ?
+             null
+              :
+               <Header
                 color="transparent"
                 routes={dashboardRoutes}
                 brand="Climb on"
@@ -43,6 +57,7 @@ export const App = () => {
                     color: "white"
                 }}
             />
+            }
             <Switch>
                 <Route path="/login" component={LoginPage} />
                 <Route path="/signup" component={SignupPage} />
@@ -52,7 +67,7 @@ export const App = () => {
                 <Route path="/friend-requests" component={FriendRequestPage} />
                 <Route exact path="/" component={LandingPage} />
             </Switch>
-            <MessageBar/>
+            { hideBars ? null : <MessageBar/> }
         </div>
     )
 }

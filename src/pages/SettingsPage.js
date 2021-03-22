@@ -38,7 +38,13 @@ const [state, setState] = useState('')
 const [photo, setPhoto] = useState('')
 const [background_image, setBackgroundImage] = useState('')
 const [loginErrors, setLoginErrors] = useState([])
+const errors = useSelector(state => state.loginErrors)
 useEffect(() => {
+    setLoginErrors(errors)
+}, [errors])
+
+useEffect(() => {
+    // takes the climbing preference of the climber, and checks to see the length ( cause it can be two words) an then changes it to uppercase, the backend holds infor lowercase
     let usersClimbingPrefUppercase = user.climbing_preference?.split(' ').length > 1 ? user.climbing_preference.split(' ').forEach(word => word.charAt(0).toUpperCase() + word.substring(1)) : user.climbing_preference?.charAt(0).toUpperCase() + user.climbing_preference?.substring(1)
     setClimbing_preference(usersClimbingPrefUppercase)
     setCommitment(user.commitment)
@@ -129,7 +135,7 @@ const history = useHistory()
 
 
     return(
-        <div style={{ marginTop: '15%' }}>
+        <div style={{ marginTop: '15%', paddingBottom: '10%' }}>
             <div className={classNames(classes.main, classes.mainRaised)}>
                 <div className={classes.container}>
                     <div className={classes.section}>
@@ -279,7 +285,7 @@ const history = useHistory()
                     Select a jpg image to use as the background image that is seen on the home page, as well as your profile page.
                     </FormText>
                   </CardBody>
-                    <Button onClick={handleSubmit} simple color="primary" size="lg">
+                    <Button onClick={handleSubmit} color="primary" size="lg">
                       Update
                     </Button>
                     </form>
