@@ -40,6 +40,8 @@ export default function FeedSection() {
           return 0
         })
         break;
+        default:
+          return
     }
     return sortedPosts.map(post => <PostCard post={post} />)
   }

@@ -110,6 +110,7 @@ export const thunkUpdateUser = (id, formData) => {
 
 export const thunkFetchUser = id => {
     return (dispatch) => {
+        dispatch(fetchUserStart())
         fetch(`http://localhost:3000/users/${id}`)
             .then(resp => resp.json())
             .then(user => {

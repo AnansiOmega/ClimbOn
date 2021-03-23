@@ -38,6 +38,7 @@ export const MessageBar = () => {
     const [drawerOpen, setDrawerOpen] = useState(false)
     const user = useSelector(state => state.user, shallowEqual)
     const { notifications, friends } = user
+    let notificationCount = notifications?.length
     useEffect(() => {
       if(!user.id) return  /// filters out messages to only show the new messages, to update whether there should be new message button
       let newNotifications = notifications?.filter( notification => notification.notice_type === 'newMessage')
@@ -45,11 +46,11 @@ export const MessageBar = () => {
           return friends.find(friend => friend.id === notification.notice_id)
         })
         setUnreadMessages(Array.from(new Set(messages)))// doesn't matter how many messages from the same person, just have a bubble
-    },[user, notifications?.length])
+    },[user, notificationCount, friends, notifications])
 
 
     const renderContacts = () => {
-      return friends?.map(friend => <MessageModal user={friend} />) // renders users friends to side drawer
+      return friends?.map(friend => <MessageModal key={friend.id} user={friend} />) // renders users friends to side drawer
     }
 
 

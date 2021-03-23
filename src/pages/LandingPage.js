@@ -1,20 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { useSelector, shallowEqual } from 'react-redux'
 import { thunkFetchUser } from '../Actions/user'
 import { useDispatch } from 'react-redux'
-
-
-// nodejs library that concatenates classes
 import classNames from "classnames";
-// @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-// import Header from "components/Header/Header.js";
-import Footer from "components/Footer/Footer.js";
-// import HeaderLinks from "components/Header/HeaderLinks.js";
 import Parallax from "components/Parallax/Parallax.js";
 import styles from "assets/jss/material-kit-react/views/landingPage.js";
-// Sections for this page
 import FeedSection from "./FeedSection";
 import CreatePostSection from '../myComponents/CreatePostSection'
 import { Backdrop, CircularProgress } from '@material-ui/core';
@@ -24,6 +16,7 @@ const useStyles = makeStyles(styles);
 export default function LandingPage(props) {
   const user = useSelector(state => state.user, shallowEqual)
   const dispatch = useDispatch()
+  const history = useHistory()
   const [picAnimation, setPicAnimation] = useState('hidden-profile-pic')
   useEffect(() => {
     setTimeout(() => setPicAnimation('profile-pic'), 500)
@@ -51,7 +44,7 @@ export default function LandingPage(props) {
     if(!friends) return 
     return friends.map( person => {
       const imgUrl = `http://localhost:3000/${person.photo}`    
-      return <div className={picAnimation}><img src={imgUrl} alt="profile picture" className={imageClasses}  id='friends-landing-page-pic'/></div>
+      return <div onClick={() => history.push(`/profile/${person.id}`)} className={picAnimation}><img src={imgUrl} alt="profile" className={imageClasses}  id='friends-landing-page-pic'/></div>
     }) 
   }
 
@@ -68,7 +61,7 @@ export default function LandingPage(props) {
           {renderFriends()}
           <div className={picAnimation}>
             <Link to={profileUrl} className='home-page-link'>
-              <img src={profileImageUrl} alt="profile picture" className={imageClasses} id='landing-page-pic'/>
+              <img src={profileImageUrl} alt="profile" className={imageClasses} id='landing-page-pic'/>
               </Link>
               <h4>
                 {`${fname} ${lname}`}
@@ -85,7 +78,6 @@ export default function LandingPage(props) {
           <FeedSection />
         </div>
       </div>
-      {/* <Footer /> */}
     </div>
   );
 }

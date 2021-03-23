@@ -11,7 +11,6 @@ import modalStyle from "../assets/jss/material-kit-react/modalStyle";
 import { ActionCableConsumer } from 'react-actioncable-provider'
 import { useDispatch } from 'react-redux'
 import { thunkHandleStartConvo, thunkDeleteNotification, thunkSendMessage } from '../Actions/user'
-import { ContactSupportOutlined } from '@material-ui/icons';
 
 
 

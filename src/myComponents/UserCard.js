@@ -19,6 +19,7 @@ const useStyles = makeStyles(styles);
 export default function Cards(props) {
   const [friendReqSent, setFriendReqSent] = useState(false)
   const { climbing_preference, username, fname, lname, photo, skill_level, id } = props['user']// for some reason props are sent as '{user: {blah: blah}}' I have to destructure this way
+  console.log(props)
   const dispatch = useDispatch()
   
   const handleFriendReq = () => {
@@ -45,7 +46,10 @@ export default function Cards(props) {
         <h5>{`${fname} ${lname}`}</h5>
         <h5>{`Climbing ${climbing_preference}`}</h5>
         <h5>{`Grade: ${skill_level}`}</h5>
+        {props['type'] === 'find-climbers' ?
         <Button disabled={friendReqSent} onClick={handleFriendReq} color={color}>{friendReqSent ? "Sent!" : "Add Friend"}</Button>
+        :
+        null }
       </CardBody>
     </Card>
   );

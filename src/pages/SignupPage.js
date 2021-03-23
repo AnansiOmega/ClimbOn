@@ -38,6 +38,7 @@ export default function LoginPage(props) {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [fname, setFname] = useState('')
   const [lname, setLname] = useState('')
   const [age, setAge] = useState('')
@@ -61,6 +62,9 @@ export default function LoginPage(props) {
       break;
       case 'password':
           setPassword(e.target.value)
+      break;
+      case 'confirmPassword':
+          setConfirmPassword(e.target.value)
       break;
       case 'fname':
           setFname(e.target.value)
@@ -138,15 +142,16 @@ export default function LoginPage(props) {
     }
 
     dispatch(thunkCreateNewUser(formData))
-    // history.push('/')
+    const id = localStorage.getItem('userId')
+    if(id) history.push('/')
   }
 
 
   const renderErrors = () => {
     if(loginErrors){
-        return loginErrors.map(error => error.split(' ')[0])
+      return loginErrors.map(error => error.split(' ')[0])
     } else {
-        return []
+      return []
     }
 }
 
@@ -168,7 +173,7 @@ export default function LoginPage(props) {
                 <form className={classes.form}>
                   <CardBody>
                     <CustomInput
-                      labelText={renderErrors().includes('Username') ? "Username must be valid" : 'New Username'}
+                      labelText={renderErrors().includes('Username') ? "Username must be valid" : 'Username'}
                       error={renderErrors().includes('Username')}
                       id='username'
                       value={username}
@@ -183,6 +188,17 @@ export default function LoginPage(props) {
                       labelText={renderErrors().includes('Password') ? "Password must be valid" : 'Password'}
                       error={renderErrors().includes('Password')}
                       id='password'
+                      handleInput={handleInput}
+                      value={password}
+                      formControlProps={{
+                        fullWidth: true
+                      }}
+                      inputProps={{ type: "password" }}
+                    />
+                    <CustomInput
+                      labelText={password !== confirmPassword ? 'Passwords do not match' : 'Confirm Password'}
+                      error={password !== confirmPassword}
+                      id='confirmPassword'
                       handleInput={handleInput}
                       value={password}
                       formControlProps={{
@@ -308,7 +324,7 @@ export default function LoginPage(props) {
                     <Row>
                         <Col>
                     <CustomInput
-                      labelText={renderErrors().includes('Street') ? "Street can't be blank" : 'Street'}
+                      labelText={renderErrors().includes('Street') ? "Street can't be blank" : 'Address'}
                       error={renderErrors().includes('Street')}
                       id='street'
                       handleInput={handleInput}

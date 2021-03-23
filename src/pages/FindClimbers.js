@@ -45,6 +45,7 @@ export const FindClimbers = () => {
             break;
             case 'distance':
                 setDistance(e.target.value)
+            break;
             default:
                 return
         }
@@ -60,7 +61,7 @@ export const FindClimbers = () => {
         if(loader) return
         return matches.map(user => {
             if(user.id !== id){
-                return <UserCard id={user.id} user={user}></UserCard>}
+                return <UserCard type="find-climbers" id={user.id} user={user} />}
             }
         )
     }

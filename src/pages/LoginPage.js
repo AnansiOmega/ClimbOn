@@ -37,9 +37,9 @@ export default function LoginPage(props) {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const auth = useSelector(state => state.auth)
   const errors = useSelector(state => state.loginErrors)
-
+  const auth = useSelector(state => state.auth)
+  
   useEffect(() => {
     const token = localStorage.getItem('myToken')
     token ? history.push('/') : history.push('/login')
@@ -98,7 +98,7 @@ export default function LoginPage(props) {
                     </div>
                   </CardHeader>
                   <p className={classes.divider}>Or Be Classical</p>
-                  { loginErrors.length > 1 ? <p className={classes.divider} style={{ color:'red', }}>Username or Password is incorrect</p> : null }
+                  { loginErrors.length > 0 ? <p className={classes.divider} style={{ color:'red', }}>Username or Password is incorrect</p> : null }
                   <CardBody>
                     <CustomInput
                       labelText="Username"

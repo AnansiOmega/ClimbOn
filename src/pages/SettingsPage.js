@@ -88,6 +88,7 @@ const history = useHistory()
       break;
       case 'photo':
           setPhoto(e.target.files[0])
+      break;
       case 'backgroundImage':
           setBackgroundImage(e.target.files[0])
       break;
@@ -99,10 +100,6 @@ const history = useHistory()
     
   const handleSubmit = e => {
     e.preventDefault()
-    if( password !== confirmPassword){
-        setLoginErrors('passwords do not match')
-        return
-    }
     let formState = {
       username,
       password,
@@ -133,6 +130,15 @@ const history = useHistory()
   }
 
 
+    const renderErrors = () => {
+        if (loginErrors) {
+            return loginErrors.map(error => error.split(' ')[0])
+        } else {
+            return []
+        }
+    }
+
+
 
     return(
         <div style={{ marginTop: '15%', paddingBottom: '10%' }}>
@@ -143,7 +149,8 @@ const history = useHistory()
                         <form className={classes.form}>
                   <CardBody>
                     <CustomInput
-                      labelText="New Username"
+                      labelText={renderErrors().includes('Username') ? 'Username must be valid' : 'New Username'}
+                      error={renderErrors().includes('Username')}
                       id='username'
                       value={username}
                       setUsername={setUsername}
@@ -154,7 +161,8 @@ const history = useHistory()
                       inputProps={{ type: "text"}}
                     />
                     <CustomInput
-                      labelText="New Password"
+                      labelText={renderErrors().includes('Password') ? "Password must be valid" : 'New Password'}
+                      error={renderErrors().includes('Password')}
                       id='password'
                       handleInput={handleInput}
                       value={password}
@@ -164,7 +172,8 @@ const history = useHistory()
                       inputProps={{ type: "password" }}
                     />
                     <CustomInput
-                      labelText="Confirm Password"
+                      labelText={password !== confirmPassword ? 'Passwords do not match' : 'Confirm Password'}
+                      error={password !== confirmPassword}
                       id='confirmPassword'
                       handleInput={handleInput}
                       value={password}
@@ -235,7 +244,8 @@ const history = useHistory()
                     <Row>
                         <Col>
                     <CustomInput
-                      labelText="Address"
+                      labelText={renderErrors().includes('Street') ? "Street can't be blank" : 'Address'}
+                      error={renderErrors().includes('Street')}
                       id='street'
                       handleInput={handleInput}
                       value={street}
@@ -247,7 +257,8 @@ const history = useHistory()
                     </Col>
                     <Col>
                     <CustomInput
-                    labelText="City"
+                    labelText={renderErrors().includes('City') ? "City can't be blank" : 'City'}
+                    error={renderErrors().includes('City')}
                     id='city'
                     handleInput={handleInput}
                     value={city}
@@ -259,7 +270,8 @@ const history = useHistory()
                   </Col>
                   <Col>
                   <CustomInput
-                  labelText="State"
+                  labelText={renderErrors().includes('State') ? "State can't be blank" : 'State'}
+                  error={renderErrors().includes('State')}
                   id='state'
                   handleInput={handleInput}
                   value={state}

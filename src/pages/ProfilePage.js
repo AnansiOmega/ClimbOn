@@ -16,7 +16,7 @@ import Footer from "components/Footer/Footer.js";
 import Button from "components/CustomButtons/Button.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
-import FriendMessageCard from '../myComponents/FriendMessageCard'
+import UserCard from '../myComponents/UserCard'
 import NavPills from "components/NavPills/NavPills.js";
 import Parallax from "components/Parallax/Parallax.js";
 import styles from "assets/jss/material-kit-react/views/profilePage.js";
@@ -26,11 +26,12 @@ const useStyles = makeStyles(styles);
 export default function ProfilePage(props) {
   const dispatch = useDispatch()
   const params = useParams()
+  let paramsId = params["id"]
 
   useEffect(() => { // when profile page mounts will send fetch request for the user at the params
     dispatch(thunkFetchUser(params["id"]))
     dispatch(thunkFetchUsersPosts(params["id"]))
-  },[params["id"]])
+  },[paramsId, params])
   
   const classes = useStyles();
   const imageClasses = classNames(
@@ -48,7 +49,7 @@ export default function ProfilePage(props) {
     const renderConversations = () => { // might remove this later since I've decided to render all friends on drawer instead
       if(!friends) return
       return friends.map( user => {
-        return <FriendMessageCard user={user}/>
+        return <UserCard user={user} />
       })
     }
 
@@ -67,7 +68,7 @@ export default function ProfilePage(props) {
               <GridItem xs={12} sm={12} md={6}>
                 <div className={classes.profile}>
                   <div>
-                    <img src={imgUrl} alt="profile-picture" className={imageClasses} />
+                    <img src={imgUrl} alt="profile" className={imageClasses} />
                   </div>
                   <div className={classes.name}>
                     <h1 className={classes.title}>{`${fname} ${lname}`}</h1>

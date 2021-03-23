@@ -58,7 +58,7 @@ export default function PostCard(props) {
     likes.forEach( like => {
       if(like.user.id === rootUser.id) setLiked(true)
     })    // doesn't seem like components get
-  },[likes])   // re-rendered, when they are sorted in higher up component.
+  },[likes, rootUser.id])   // re-rendered, when they are sorted in higher up component.
 
   const handleShowComments = () => { // can't thunk this out because I need this information specifically for this component
     fetch(`http://localhost:3000/show-comments/${id}`) // can't hold all of the comments for every post in store 
